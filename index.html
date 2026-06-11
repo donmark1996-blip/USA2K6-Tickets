@@ -7,1025 +7,888 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
- *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- :root {
- --navy: #0A1628; --navy-mid: #0D1F3C; --navy-light: #132A50;
- --red: #B22234; --red-bright: #CC2936;
- --green: #1a9e3f; --green-bright: #22c55e;
- --gold: #FFD700; --gold-dim: #C9A227;
- --white: #FFFFFF; --off-white: #F0F4FF;
- --silver: #9AA8C0; --gray: #3D4F6B;
- --disabled: #2A3A54; --disabled-text: #4A5E7A;
- }
- html { scroll-behavior: smooth; }
- body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0A1628;--navy-mid:#0D1F3C;--navy-light:#132A50;
+--red:#B22234;--green:#1a9e3f;--green-bright:#22c55e;
+--gold:#FFD700;--white:#FFFFFF;--silver:#9AA8C0;
+--disabled:#2A3A54;--disabled-text:#4A5E7A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
 
- /* NAV */
- nav {
- position: fixed; top: 0; left: 0; right: 0; z-index: 100;
- display: flex; align-items: center; justify-content: space-between;
- padding: 0 40px; height: 68px;
- background: rgba(10,22,40,0.92); backdrop-filter: blur(12px);
- border-bottom: 1px solid rgba(255,215,0,0.15);
- }
- .logo { display: flex; align-items: center; gap: 4px; text-decoration: none; }
- .logo-flag {
- display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 4px;
- background: repeating-linear-gradient(180deg,#B22234 0px,#B22234 5px,#fff 5px,#fff 10px);
- background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
- position: relative; line-height: 1;
- }
- .logo-flag::before {
- display: none;
- }
- .logo-number { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 2px; color: var(--gold); line-height: 1; }
- .logo-tagline { font-size: 9px; font-weight: 600; letter-spacing: 3px; color: var(--silver); text-transform: uppercase; display: block; margin-top: 2px; }
- nav ul { list-style: none; display: flex; gap: 32px; }
- nav ul a { text-decoration: none; color: var(--silver); font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.2s; }
- nav ul a:hover { color: var(--gold); }
- .nav-cta { background: var(--green) !important; color: #fff !important; padding: 8px 20px; border-radius: 3px; font-weight: 600 !important; }
- .nav-cta:hover { background: var(--green-bright) !important; color: #fff !important; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:68px;background:rgba(10,22,40,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,215,0,0.15)}
+.logo{display:flex;align-items:center;gap:4px;text-decoration:none}
+.logo-flag{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:4px;background:repeating-linear-gradient(180deg,#B22234 0px,#B22234 5px,#fff 5px,#fff 10px);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.logo-number{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--gold);line-height:1}
+.logo-tagline{font-size:9px;font-weight:600;letter-spacing:3px;color:var(--silver);text-transform:uppercase;display:block;margin-top:2px}
+nav ul{list-style:none;display:flex;gap:32px}
+nav ul a{text-decoration:none;color:var(--silver);font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.2s}
+nav ul a:hover{color:var(--gold)}
+.nav-cta{background:var(--green)!important;color:#fff!important;padding:8px 20px;border-radius:3px;font-weight:600!important}
 
- /* HERO */
- .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 60px; position: relative; overflow: hidden; }
- .hero-bg {
- position: absolute; inset: 0;
- background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(26,158,63,0.12) 0%, transparent 70%),
- radial-gradient(ellipse 60% 80% at 80% 60%, rgba(60,59,110,0.3) 0%, transparent 60%),
- linear-gradient(180deg, #050E1C 0%, #0A1628 60%, #0D1F3C 100%);
- }
- .hero-grid {
- position: absolute; inset: 0;
- background-image: linear-gradient(rgba(255,215,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.04) 1px, transparent 1px);
- background-size: 60px 60px;
- }
- .stars { position: absolute; inset: 0; pointer-events: none; }
- .star { position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; animation: twinkle 3s infinite; opacity: 0; }
- @keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:0.8;transform:scale(1)} }
- .hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; position: relative; display: flex; align-items: center; gap: 12px; }
- .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(70px, 14vw, 160px); line-height: 0.9; letter-spacing: 6px; position: relative; }
- .hero-title .usa-word {
- display: block;
- background: repeating-linear-gradient(180deg,#B22234 0px,#B22234 14px,#fff 14px,#fff 28px);
- background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative;
- }
- .hero-title .usa-word::before { display: none; }
- .hero-title .year-word { display: block; color: var(--gold); text-shadow: 0 0 60px rgba(255,215,0,0.4); font-size: 0.58em; letter-spacing: 12px; }
- .hero-subtitle { font-size: clamp(14px,2vw,18px); color: var(--silver); margin: 24px 0 40px; font-weight: 300; letter-spacing: 1px; max-width: 560px; }
- .hero-subtitle strong { color: var(--white); font-weight: 500; }
- .hero-badges { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
- .badge { border: 1px solid rgba(255,215,0,0.3); padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); background: rgba(255,215,0,0.05); }
- .hero-cta-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
- .btn-primary { background: var(--green); color: #fff; text-decoration: none; padding: 16px 40px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; transition: all 0.2s; border: 2px solid var(--green); }
- .btn-primary:hover { background: var(--green-bright); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(26,158,63,0.4); }
- .btn-secondary { background: transparent; color: var(--white); text-decoration: none; padding: 16px 40px; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; border: 2px solid rgba(255,255,255,0.25); transition: all 0.2s; }
- .btn-secondary:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
- .scroll-hint { position: absolute; bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--silver); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; animation: bounce 2s infinite; }
- @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 20px 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(26,158,63,0.12) 0%,transparent 70%),linear-gradient(180deg,#050E1C 0%,#0A1628 60%,#0D1F3C 100%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,215,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,215,0,0.04) 1px,transparent 1px);background-size:60px 60px}
+.stars{position:absolute;inset:0;pointer-events:none}
+.star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;animation:twinkle 3s infinite;opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(0.5)}50%{opacity:0.8;transform:scale(1)}}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;position:relative;display:flex;align-items:center;gap:12px}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(70px,14vw,160px);line-height:0.9;letter-spacing:6px;position:relative}
+.hero-title .usa-word{display:block;background:repeating-linear-gradient(180deg,#B22234 0px,#B22234 14px,#fff 14px,#fff 28px);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-title .year-word{display:block;color:var(--gold);text-shadow:0 0 60px rgba(255,215,0,0.4);font-size:0.58em;letter-spacing:12px}
+.hero-subtitle{font-size:clamp(14px,2vw,18px);color:var(--silver);margin:24px 0 40px;font-weight:300;letter-spacing:1px;max-width:560px}
+.hero-subtitle strong{color:var(--white);font-weight:500}
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:48px}
+.badge{border:1px solid rgba(255,215,0,0.3);padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:rgba(255,215,0,0.05)}
+.hero-cta-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:var(--green);color:#fff;text-decoration:none;padding:16px 40px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border-radius:3px;transition:all 0.2s;border:2px solid var(--green)}
+.btn-primary:hover{background:var(--green-bright);transform:translateY(-2px)}
+.btn-secondary{background:transparent;color:var(--white);text-decoration:none;padding:16px 40px;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border-radius:3px;border:2px solid rgba(255,255,255,0.25);transition:all 0.2s}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.scroll-hint{position:absolute;bottom:30px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--silver);font-size:10px;letter-spacing:3px;text-transform:uppercase;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
- /* STATS STRIP */
- .stats-strip { background: var(--green); padding: 20px 40px; display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
- .stat-item { text-align: center; }
- .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; line-height: 1; }
- .stat-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.9; margin-top: 2px; }
+/* STATS */
+.stats-strip{background:var(--green);padding:20px 40px;display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1}
+.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:0.9;margin-top:2px}
 
- /* SECTIONS */
- section { padding: 100px 40px; max-width: 1300px; margin: 0 auto; }
- .section-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
- .section-title { font-family: 'Oswald', sans-serif; font-size: clamp(32px,5vw,52px); font-weight: 700; letter-spacing: 1px; line-height: 1.1; margin-bottom: 16px; }
- .section-desc { color: var(--silver); font-size: 15px; font-weight: 300; max-width: 520px; line-height: 1.7; }
+/* SECTIONS */
+section{padding:100px 40px;max-width:1300px;margin:0 auto}
+.section-eyebrow{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.section-title{font-family:'Oswald',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:1px;line-height:1.1;margin-bottom:16px}
+.section-desc{color:var(--silver);font-size:15px;font-weight:300;max-width:520px;line-height:1.7}
 
- /* TICKETS */
- .tickets-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; flex-wrap: wrap; gap: 20px; }
- .savings-pill { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--gold); padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; }
- .tickets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 24px; }
- .ticket-card { background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; position: relative; transition: transform 0.25s, box-shadow 0.25s; cursor: pointer; }
- .ticket-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,215,0,0.2); }
- .ticket-accent-bar { height: 4px; background: linear-gradient(90deg, var(--green) 0%, var(--gold) 100%); }
- .ticket-badge-row { padding: 16px 20px 0; display: flex; justify-content: space-between; align-items: center; }
- .match-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); background: rgba(255,215,0,0.1); padding: 4px 10px; border-radius: 3px; }
- .limited-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ff6b6b; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); padding: 4px 10px; border-radius: 3px; }
- .available-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #69db7c; background: rgba(105,219,124,0.1); border: 1px solid rgba(105,219,124,0.3); padding: 4px 10px; border-radius: 3px; }
- .ticket-body { padding: 18px 20px 0; }
- .ticket-teams { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
- .ticket-meta { font-size: 12px; color: var(--silver); display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; line-height: 1.6; }
- .ticket-meta span { display: flex; align-items: center; gap: 6px; white-space: normal; }
- .ticket-perf { margin: 0 -1px; border: none; border-top: 2px dashed rgba(255,255,255,0.1); position: relative; }
- .ticket-perf::before, .ticket-perf::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; background: var(--navy); border: 1px solid rgba(255,255,255,0.08); }
- .ticket-perf::before { left: -11px; }
- .ticket-perf::after { right: -11px; }
- .ticket-price-row { padding: 16px 20px 20px; display: flex; justify-content: space-between; align-items: center; }
- .original-price { font-size: 11px; color: var(--disabled-text); text-decoration: line-through; letter-spacing: 0.5px; margin-bottom: 2px; }
- .our-price { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--gold); line-height: 1; }
- .our-price sup { font-size: 14px; vertical-align: top; margin-top: 4px; }
- .save-label { font-size: 10px; color: #69db7c; font-weight: 600; letter-spacing: 1px; margin-top: 3px; }
- .ticket-buy-btn { background: var(--green); color: #fff; border: none; cursor: pointer; padding: 12px 24px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; transition: all 0.2s; white-space: nowrap; }
- .ticket-buy-btn:hover { background: var(--green-bright); transform: scale(1.04); box-shadow: 0 6px 20px rgba(26,158,63,0.4); }
- .category-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
- .tab-btn { padding: 8px 20px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: var(--silver); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 3px; cursor: pointer; transition: all 0.2s; }
- .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
- .tab-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 700; }
+/* TICKETS */
+.tickets-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:20px}
+.savings-pill{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:var(--gold);padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600}
+.category-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px}
+.tab-btn{padding:8px 20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:var(--silver);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all 0.2s}
+.tab-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tab-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:700}
+.tickets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px}
 
- /* PAYMENT */
- #payment { background: var(--navy-mid); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 100px 40px; }
- #payment > div { max-width: 1300px; margin: 0 auto; }
- .payment-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: start; margin-top: 60px; }
- .payment-methods { display: flex; flex-direction: column; gap: 12px; }
- .pay-method { border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 18px 22px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; position: relative; }
- .pay-method.active { border-color: var(--gold); background: rgba(255,215,0,0.06); cursor: pointer; }
- .pay-method.active:hover { background: rgba(255,215,0,0.1); box-shadow: 0 4px 20px rgba(255,215,0,0.15); }
- /* Bank and card: visible but show "unavailable" state */
- .pay-method.inactive { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.03); cursor: pointer; opacity: 0.75; transition: all 0.2s; }
- .pay-method.inactive:hover { border-color: rgba(255,255,255,0.35); opacity: 1; background: rgba(255,255,255,0.06); }
- .pay-method.selected-method { border-color: var(--gold) !important; background: rgba(255,215,0,0.06) !important; opacity: 1 !important; }
- .pay-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 22px; flex-shrink: 0; }
- .pay-icon.crypto { background: rgba(247,147,26,0.15); }
- .pay-icon.bank { background: rgba(100,150,255,0.1); }
- .pay-icon.card { background: rgba(120,120,120,0.1); }
- .pay-info { flex: 1; }
- .pay-name { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 1px; margin-bottom: 2px; }
- .pay-desc { font-size: 11px; color: var(--silver); letter-spacing: 0.5px; }
- .pay-badge-active { font-size: 9px; font-weight: 700; letter-spacing: 2px; color: var(--green-bright); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); padding: 3px 10px; border-radius: 3px; text-transform: uppercase; }
- .pay-badge-unavail { font-size: 9px; font-weight: 700; letter-spacing: 2px; color: #888; background: rgba(100,100,100,0.1); border: 1px solid rgba(100,100,100,0.2); padding: 3px 10px; border-radius: 3px; text-transform: uppercase; }
- .unavail-tooltip { font-size: 10px; color: #888; margin-top: 6px; font-style: italic; }
+/* TICKET CARD */
+.ticket-card{background:var(--navy-mid);border:1px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s}
+.ticket-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px rgba(255,215,0,0.2)}
+.ticket-accent-bar{height:4px;background:linear-gradient(90deg,var(--green) 0%,var(--gold) 100%)}
+.ticket-badge-row{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.match-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 10px;border-radius:3px}
+.limited-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ff6b6b;background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);padding:4px 10px;border-radius:3px}
+.available-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#69db7c;background:rgba(105,219,124,0.1);border:1px solid rgba(105,219,124,0.3);padding:4px 10px;border-radius:3px}
+.ticket-body{padding:14px 18px}
+.ticket-teams{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.ticket-meta{font-size:12px;color:var(--silver);display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
 
- /* CRYPTO PANEL */
- .crypto-panel { background: var(--navy-light); border: 1px solid rgba(255,215,0,0.2); border-radius: 12px; overflow: hidden; }
- .crypto-panel-header { background: rgba(255,215,0,0.08); padding: 20px 28px; border-bottom: 1px solid rgba(255,215,0,0.15); display: flex; align-items: center; gap: 12px; }
- .crypto-panel-header h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 1px; color: var(--gold); }
- .crypto-selector { padding: 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; gap: 10px; flex-wrap: wrap; }
- .crypto-btn { padding: 10px 18px; border: 1px solid rgba(255,255,255,0.15); background: transparent; cursor: pointer; border-radius: 6px; color: var(--silver); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
- .crypto-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.08); }
- .crypto-btn:hover { border-color: var(--gold); color: var(--gold); }
- .crypto-address-area { padding: 24px 28px; }
- .address-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--silver); margin-bottom: 10px; }
- .address-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
- .address-text { font-family: 'Courier New', monospace; font-size: 12px; color: var(--white); flex: 1; word-break: break-all; line-height: 1.5; }
- .copy-btn { background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); color: var(--gold); padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; transition: all 0.2s; font-family: 'Inter', sans-serif; }
- .copy-btn:hover { background: rgba(255,215,0,0.25); }
- .crypto-notice { padding: 14px 16px; background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); border-radius: 6px; font-size: 11px; color: #ff9999; line-height: 1.6; }
- .crypto-notice strong { color: #ff6b6b; }
- .send-instructions { padding: 24px 28px; border-top: 1px solid rgba(255,255,255,0.06); }
- .steps-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
- .steps-list li { display: flex; gap: 14px; align-items: flex-start; font-size: 13px; color: var(--silver); line-height: 1.5; }
- .step-num { width: 22px; height: 22px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; color: white; }
+/* SEAT TIERS */
+.seat-tiers{border-top:1px solid rgba(255,255,255,0.06);padding-top:10px}
+.seat-tier-row{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:6px;cursor:pointer;transition:background 0.2s;margin-bottom:4px;border:1px solid transparent}
+.seat-tier-row:hover{background:rgba(255,255,255,0.05)}
+.vip-row{background:rgba(255,215,0,0.04);border-color:rgba(255,215,0,0.2)!important}
+.vip-row:hover{background:rgba(255,215,0,0.1)!important}
+.seat-tier-left{flex:1}
+.seat-label{font-size:12px;font-weight:700;color:var(--white);letter-spacing:0.5px}
+.seat-desc{font-size:10px;color:var(--silver);margin-top:1px}
+.seat-tier-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.seat-original{font-size:10px;color:var(--disabled-text);text-decoration:line-through}
+.seat-our{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--gold);min-width:60px;text-align:right}
+.seat-buy-btn{background:var(--green);color:#fff;border:none;cursor:pointer;padding:6px 14px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;border-radius:4px;transition:all 0.2s;white-space:nowrap}
+.seat-buy-btn:hover{background:var(--green-bright)}
+.vip-btn{background:linear-gradient(135deg,#C9A227,#FFD700);color:var(--navy)!important}
 
- /* GUARANTEE STRIP */
- .guarantee-strip { background: linear-gradient(90deg, #0D1F3C, #132A50, #0D1F3C); border-top: 1px solid rgba(255,215,0,0.15); border-bottom: 1px solid rgba(255,215,0,0.15); padding: 40px; display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
- .guarantee-item { display: flex; align-items: center; gap: 14px; max-width: 220px; }
- .guarantee-icon { font-size: 28px; flex-shrink: 0; }
- .guarantee-text strong { display: block; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 1px; margin-bottom: 2px; }
- .guarantee-text span { font-size: 11px; color: var(--silver); line-height: 1.4; }
+/* GUARANTEE */
+.guarantee-strip{background:linear-gradient(90deg,#0D1F3C,#132A50,#0D1F3C);border-top:1px solid rgba(255,215,0,0.15);border-bottom:1px solid rgba(255,215,0,0.15);padding:40px;display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+.guarantee-item{display:flex;align-items:center;gap:14px;max-width:220px}
+.guarantee-icon{font-size:28px;flex-shrink:0}
+.guarantee-text strong{display:block;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px;margin-bottom:2px}
+.guarantee-text span{font-size:11px;color:var(--silver);line-height:1.4}
 
- /* FOOTER */
- footer { background: #050E1C; padding: 60px 40px 30px; border-top: 1px solid rgba(255,215,0,0.1); }
- .footer-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
- .footer-brand p { font-size: 13px; color: var(--silver); line-height: 1.7; margin-top: 16px; max-width: 320px; }
- .footer-col h4 { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
- .footer-col ul { list-style: none; }
- .footer-col ul li { margin-bottom: 12px; }
- .footer-col ul li a { text-decoration: none; color: var(--silver); font-size: 13px; transition: color 0.2s; }
- .footer-col ul li a:hover { color: var(--white); }
- .footer-bottom { max-width: 1300px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
- .footer-bottom p { font-size: 11px; color: var(--disabled-text); letter-spacing: 0.5px; }
- .footer-disclaimer { font-size: 10px; color: var(--disabled-text); max-width: 1300px; margin: 16px auto 0; line-height: 1.6; text-align: center; padding: 0 40px; }
+/* PAYMENT */
+#payment{background:var(--navy-mid);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:100px 40px}
+#payment > div{max-width:1300px;margin:0 auto}
+.payment-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:80px;align-items:start;margin-top:60px}
+.payment-methods{display:flex;flex-direction:column;gap:12px}
+.pay-method{border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:18px 22px;display:flex;align-items:center;gap:16px;transition:all 0.2s;position:relative}
+.pay-method.active{border-color:var(--gold);background:rgba(255,215,0,0.06);cursor:pointer}
+.pay-method.inactive{border-color:rgba(255,255,255,0.1);opacity:0.7;cursor:pointer}
+.pay-method.inactive:hover{opacity:0.9}
+.pay-method.selected-method{border-color:var(--gold)!important;background:rgba(255,215,0,0.06)!important;opacity:1!important}
+.pay-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:22px;flex-shrink:0}
+.pay-icon.crypto{background:rgba(247,147,26,0.15)}
+.pay-icon.bank{background:rgba(100,150,255,0.1)}
+.pay-icon.card{background:rgba(120,120,120,0.1)}
+.pay-info{flex:1}
+.pay-name{font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:1px;margin-bottom:2px}
+.pay-desc{font-size:11px;color:var(--silver)}
+.unavail-tooltip{font-size:10px;color:#888;margin-top:4px;font-style:italic}
+.pay-badge-active{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--green-bright);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:3px 10px;border-radius:3px;text-transform:uppercase}
+.pay-badge-unavail{font-size:9px;font-weight:700;letter-spacing:2px;color:#888;background:rgba(100,100,100,0.1);border:1px solid rgba(100,100,100,0.2);padding:3px 10px;border-radius:3px;text-transform:uppercase}
 
- /* PURCHASE MODAL */
- .modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
- .modal-overlay.open { opacity: 1; pointer-events: all; }
- .modal { background: var(--navy-mid); border: 1px solid rgba(255,215,0,0.25); border-radius: 12px; max-width: 520px; width: 100%; overflow: hidden; transform: translateY(20px); transition: transform 0.3s; max-height: 90vh; overflow-y: auto; }
- .modal-overlay.open .modal { transform: translateY(0); }
- .modal-header { background: linear-gradient(135deg, var(--green), #0f5e25); padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
- .modal-header h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 1px; }
- .modal-header .match-info { font-size: 12px; opacity: 0.8; margin-top: 4px; letter-spacing: 0.5px; }
- .modal-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
- .modal-close:hover { background: rgba(255,255,255,0.3); }
- .modal-body { padding: 28px 32px; }
- .qty-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; }
- .qty-label { font-size: 13px; color: var(--silver); }
- .qty-controls { display: flex; align-items: center; gap: 16px; }
- .qty-btn { width: 32px; height: 32px; background: rgba(255,255,255,0.08); border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
- .qty-btn:hover { background: rgba(255,255,255,0.18); }
- .qty-num { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; min-width: 28px; text-align: center; }
- .modal-total { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px; }
- .modal-total span { color: var(--silver); font-size: 14px; }
- .modal-total strong { font-family: 'Oswald', sans-serif; font-size: 26px; color: var(--gold); }
- .modal-cta { width: 100%; padding: 16px; background: var(--green); color: white; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
- .modal-cta:hover { background: var(--green-bright); transform: translateY(-1px); }
- .modal-note { text-align: center; font-size: 11px; color: var(--disabled-text); margin-top: 12px; line-height: 1.5; }
+/* CRYPTO PANEL */
+.crypto-panel,.bank-panel,.card-panel{background:var(--navy-light);border:1px solid rgba(255,215,0,0.2);border-radius:12px;overflow:hidden;display:none}
+.crypto-panel.active-panel,.bank-panel.active-panel,.card-panel.active-panel{display:block}
+.crypto-panel-header{background:rgba(255,215,0,0.08);padding:20px 28px;border-bottom:1px solid rgba(255,215,0,0.15);display:flex;align-items:center;gap:12px}
+.crypto-panel-header h3{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;color:var(--gold)}
+.bank-panel-header{background:rgba(100,150,255,0.08);padding:20px 28px;border-bottom:1px solid rgba(100,150,255,0.15);display:flex;align-items:center;gap:12px}
+.bank-panel-header h3{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;color:#6496ff}
+.card-panel-header{background:rgba(180,180,180,0.06);padding:20px 28px;border-bottom:1px solid rgba(180,180,180,0.12);display:flex;align-items:center;gap:12px}
+.card-panel-header h3{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;color:#c0c0c0}
+.crypto-selector{padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:10px;flex-wrap:wrap}
+.crypto-btn{padding:10px 18px;border:1px solid rgba(255,255,255,0.15);background:transparent;cursor:pointer;border-radius:6px;color:var(--silver);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;transition:all 0.2s}
+.crypto-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.08)}
+.crypto-btn:hover{border-color:var(--gold);color:var(--gold)}
+.crypto-address-area{padding:20px 28px}
+.address-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:10px}
+.address-box{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.address-text{font-family:'Courier New',monospace;font-size:12px;color:var(--white);flex:1;word-break:break-all;line-height:1.5}
+.copy-btn{background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.3);color:var(--gold);padding:8px 14px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;transition:all 0.2s;font-family:'Inter',sans-serif}
+.copy-btn:hover{background:rgba(255,215,0,0.25)}
+.crypto-notice{padding:12px 16px;background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.2);border-radius:6px;font-size:11px;color:#ff9999;line-height:1.6}
+.send-instructions{padding:20px 28px;border-top:1px solid rgba(255,255,255,0.06)}
+.steps-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.steps-list li{display:flex;gap:14px;align-items:flex-start;font-size:13px;color:var(--silver);line-height:1.5}
+.step-num{width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;color:white}
+.form-panel-body{padding:24px 28px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:8px;display:block}
+.form-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:12px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border 0.2s}
+.form-input:focus{border-color:rgba(255,255,255,0.35)}
+.form-input::placeholder{color:var(--disabled-text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-submit-btn{width:100%;padding:16px;background:rgba(100,100,120,0.3);color:#aaa;border:1px solid rgba(255,255,255,0.1);font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.unavail-alert{display:none;margin-top:16px;padding:16px 20px;background:rgba(255,100,100,0.08);border:1px solid rgba(255,100,100,0.25);border-radius:8px;font-size:13px;color:#ff9999;line-height:1.6}
+.unavail-alert.show{display:block}
+.card-visual{background:linear-gradient(135deg,#2a3a5a,#1a2540);border-radius:12px;padding:22px 24px;margin-bottom:20px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.1)}
+.card-chip{width:36px;height:28px;background:linear-gradient(135deg,#d4af37,#f0c040);border-radius:5px;margin-bottom:16px}
+.card-number-display{font-family:'Courier New',monospace;font-size:18px;letter-spacing:4px;color:rgba(255,255,255,0.8);margin-bottom:14px}
+.card-bottom{display:flex;justify-content:space-between}
+.card-holder-label,.card-expiry-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:3px}
+.card-holder-name,.card-expiry-val{font-size:13px;font-weight:600;color:rgba(255,255,255,0.8)}
+.bank-ref-box{background:rgba(100,150,255,0.06);border:1px solid rgba(100,150,255,0.2);border-radius:8px;padding:16px;margin-bottom:16px}
+.bank-ref-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#6496ff;margin-bottom:8px}
+.bank-ref-value{font-family:'Courier New',monospace;font-size:20px;font-weight:700;color:#fff;letter-spacing:3px}
 
- /* CONFIRMATION EMAIL PREVIEW */
- .confirm-box { display: none; margin-top: 24px; background: #0a1f0f; border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; overflow: hidden; }
- .confirm-box.show { display: block; }
- .confirm-header { background: var(--green); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
- .confirm-header span { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 1px; }
- .confirm-body { padding: 20px; font-size: 13px; line-height: 1.8; color: #cce8d4; }
- .confirm-code { font-family: 'Courier New', monospace; font-size: 20px; font-weight: 700; color: var(--green-bright); letter-spacing: 3px; text-align: center; padding: 14px; background: rgba(34,197,94,0.08); border: 1px dashed rgba(34,197,94,0.3); border-radius: 6px; margin: 14px 0; }
- .confirm-note { font-size: 11px; color: var(--silver); margin-top: 10px; line-height: 1.6; }
+/* FOOTER */
+footer{background:#050E1C;padding:60px 40px 30px;border-top:1px solid rgba(255,215,0,0.1)}
+.footer-inner{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;margin-bottom:48px}
+.footer-brand p{font-size:13px;color:var(--silver);line-height:1.7;margin-top:16px;max-width:320px}
+.footer-col h4{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:12px}
+.footer-col ul li a{text-decoration:none;color:var(--silver);font-size:13px;transition:color 0.2s}
+.footer-col ul li a:hover{color:var(--white)}
+.footer-bottom{max-width:1300px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:11px;color:var(--disabled-text)}
+.footer-disclaimer{font-size:10px;color:var(--disabled-text);max-width:1300px;margin:16px auto 0;line-height:1.6;text-align:center;padding:0 40px}
 
- /* scroll reveal */
- .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
- .reveal.visible { opacity: 1; transform: translateY(0); }
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--navy-mid);border:1px solid rgba(255,215,0,0.25);border-radius:12px;max-width:520px;width:100%;overflow:hidden;transform:translateY(20px);transition:transform 0.3s;max-height:90vh;overflow-y:auto}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{background:linear-gradient(135deg,var(--green),#0f5e25);padding:24px 28px;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-header h2{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px}
+.modal-header .match-info{font-size:12px;opacity:0.8;margin-top:4px}
+.modal-close{background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-body{padding:24px 28px}
+.step-indicator{display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(255,255,255,0.08);color:var(--silver);flex-shrink:0}
+.step-dot.active{background:var(--green);color:#fff}
+.step-dot.done{background:var(--gold);color:var(--navy)}
+.step-line{flex:1;max-width:40px;height:2px;background:rgba(255,255,255,0.1)}
+.step-line.active-line{background:var(--gold)}
+.step-title{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;text-align:center;margin-bottom:20px}
+.qty-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px 20px}
+.qty-label{font-size:13px;color:var(--silver)}
+.qty-controls{display:flex;align-items:center;gap:16px}
+.qty-btn{width:32px;height:32px;background:rgba(255,255,255,0.08);border:none;color:white;border-radius:6px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.qty-num{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;min-width:28px;text-align:center}
+.modal-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid rgba(255,255,255,0.08);margin-bottom:16px}
+.modal-total span{color:var(--silver);font-size:14px}
+.modal-total strong{font-family:'Oswald',sans-serif;font-size:26px;color:var(--gold)}
+.modal-cta{width:100%;padding:16px;background:var(--green);color:white;border:none;font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all 0.2s}
+.modal-cta:hover{background:var(--green-bright)}
+.modal-note{text-align:center;font-size:11px;color:var(--disabled-text);margin-top:10px;line-height:1.5}
+.step2-summary{background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);border-radius:8px;padding:14px 18px;margin-bottom:16px}
+.step2-match{font-size:13px;color:var(--silver);margin-bottom:4px}
+.step2-amount{font-size:14px;color:var(--white)}
+.step2-amount strong{color:var(--gold);font-size:18px}
+.coin-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.coin-tab{padding:8px 16px;border:1px solid rgba(255,255,255,0.15);background:transparent;cursor:pointer;border-radius:6px;color:var(--silver);font-size:12px;font-weight:700;letter-spacing:1px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.coin-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.08)}
+.wallet-display{margin-bottom:16px}
+.wallet-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:8px}
+.wallet-box{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.wallet-addr{font-family:'Courier New',monospace;font-size:11px;color:var(--white);flex:1;word-break:break-all;line-height:1.5}
+.wallet-warning{font-size:11px;color:#ff9999;background:rgba(255,100,100,0.08);border:1px solid rgba(255,100,100,0.2);border-radius:6px;padding:10px 14px;line-height:1.5}
+.txid-group{margin-bottom:18px}
+.txid-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:8px;display:block}
+.txid-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.3);border-radius:6px;padding:12px 16px;color:var(--white);font-family:'Courier New',monospace;font-size:13px;outline:none}
+.customer-form{background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:8px;padding:16px;margin-bottom:16px}
+.customer-form-title{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.cust-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:11px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border 0.2s;margin-bottom:10px}
+.cust-input:focus{border-color:var(--gold)}
+.cust-input::placeholder{color:var(--disabled-text)}
+.email-status{display:none;margin-top:12px;padding:12px 16px;border-radius:6px;font-size:12px;line-height:1.6}
+.email-status.sending{display:block;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:var(--gold)}
+.email-status.sent{display:block;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:#69db7c}
+.email-status.error{display:block;background:rgba(255,100,100,0.08);border:1px solid rgba(255,100,100,0.2);color:#ff9999}
+.confirm-box{display:none;margin-top:20px;background:#0a1f0f;border:1px solid rgba(34,197,94,0.3);border-radius:8px;overflow:hidden}
+.confirm-box.show{display:block}
+.confirm-header{background:var(--green);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.confirm-header span{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px}
+.confirm-body{padding:20px;font-size:13px;line-height:1.8;color:#cce8d4}
+.confirm-code{font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:var(--green-bright);letter-spacing:3px;text-align:center;padding:14px;background:rgba(34,197,94,0.08);border:1px dashed rgba(34,197,94,0.3);border-radius:6px;margin:14px 0}
+.confirm-note{font-size:11px;color:var(--silver);margin-top:10px;line-height:1.6}
 
- @media (max-width: 900px) {
- nav ul { display: none; }
- .payment-layout { grid-template-columns: 1fr; gap: 40px; }
- .footer-inner { grid-template-columns: 1fr; gap: 40px; }
- .stats-strip { gap: 30px; }
- }
- @media (max-width: 600px) {
- section, #payment, footer { padding-left: 20px; padding-right: 20px; }
- nav { padding: 0 20px; }
- .guarantee-strip { padding: 30px 20px; gap: 30px; }
- }
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
- /* Bank Panel */
- .bank-panel, .card-panel { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; overflow: hidden; display: none; }
- .bank-panel.active-panel, .card-panel.active-panel, .crypto-panel.active-panel { display: block; }
- .bank-panel-header { background: rgba(100,150,255,0.08); padding: 20px 28px; border-bottom: 1px solid rgba(100,150,255,0.15); display: flex; align-items: center; gap: 12px; }
- .bank-panel-header h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 1px; color: #6496ff; }
- .card-panel-header { background: rgba(180,180,180,0.06); padding: 20px 28px; border-bottom: 1px solid rgba(180,180,180,0.12); display: flex; align-items: center; gap: 12px; }
- .card-panel-header h3 { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 1px; color: #c0c0c0; }
- .form-panel-body { padding: 28px; }
- .form-group { margin-bottom: 18px; }
- .form-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--silver); margin-bottom: 8px; display: block; }
- .form-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 12px 16px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: border 0.2s; }
- .form-input:focus { border-color: rgba(255,255,255,0.35); }
- .form-input::placeholder { color: var(--disabled-text); }
- .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
- .form-submit-btn { width: 100%; padding: 16px; background: rgba(100,100,120,0.3); color: #aaa; border: 1px solid rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
- .form-submit-btn:hover { background: rgba(100,100,120,0.45); }
- /* Card visual */
- .card-visual { background: linear-gradient(135deg, #2a3a5a, #1a2540); border-radius: 12px; padding: 22px 24px; margin-bottom: 24px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
- .card-visual::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04); }
- .card-visual::after { content: ''; position: absolute; bottom: -40px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.03); }
- .card-chip { width: 36px; height: 28px; background: linear-gradient(135deg, #d4af37, #f0c040); border-radius: 5px; margin-bottom: 20px; }
- .card-number-display { font-family: 'Courier New', monospace; font-size: 18px; letter-spacing: 4px; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
- .card-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
- .card-holder-label, .card-expiry-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 3px; }
- .card-holder-name, .card-expiry-val { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); letter-spacing: 1px; }
- .card-brand { position: absolute; bottom: 20px; right: 24px; font-size: 24px; opacity: 0.6; }
- /* Bank reference box */
- .bank-ref-box { background: rgba(100,150,255,0.06); border: 1px solid rgba(100,150,255,0.2); border-radius: 8px; padding: 16px; margin-bottom: 20px; }
- .bank-ref-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #6496ff; margin-bottom: 8px; }
- .bank-ref-value { font-family: 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 3px; }
- /* Unavailable alert */
- .unavail-alert { display: none; margin-top: 16px; padding: 16px 20px; background: rgba(255,100,100,0.08); border: 1px solid rgba(255,100,100,0.25); border-radius: 8px; font-size: 13px; color: #ff9999; line-height: 1.6; animation: slideIn 0.3s ease; }
- .unavail-alert.show { display: block; }
- .unavail-alert strong { color: #ff6b6b; display: block; margin-bottom: 4px; font-size: 14px; }
- @keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-
- /* Multi-step modal */
- .step-indicator { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:20px; }
- .step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:rgba(255,255,255,0.08); color:var(--silver); flex-shrink:0; }
- .step-dot.active { background:var(--green); color:#fff; }
- .step-dot.done { background:var(--gold); color:var(--navy); }
- .step-line { flex:1; max-width:40px; height:2px; background:rgba(255,255,255,0.1); }
- .step-line.active-line { background:var(--gold); }
- .step-title { font-family:'Oswald',sans-serif; font-size:18px; font-weight:600; letter-spacing:1px; text-align:center; margin-bottom:20px; color:var(--white); }
- .step2-summary { background:rgba(255,215,0,0.06); border:1px solid rgba(255,215,0,0.15); border-radius:8px; padding:14px 18px; margin-bottom:18px; }
- .step2-match { font-size:13px; color:var(--silver); margin-bottom:4px; }
- .step2-amount { font-size:14px; color:var(--white); }
- .step2-amount strong { color:var(--gold); font-size:18px; }
- .coin-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
- .coin-tab { padding:8px 16px; border:1px solid rgba(255,255,255,0.15); background:transparent; cursor:pointer; border-radius:6px; color:var(--silver); font-size:12px; font-weight:700; letter-spacing:1px; transition:all 0.2s; font-family:'Inter',sans-serif; }
- .coin-tab.active { border-color:var(--gold); color:var(--gold); background:rgba(255,215,0,0.08); }
- .wallet-display { margin-bottom:18px; }
- .wallet-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--silver); margin-bottom:8px; }
- .wallet-box { background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:12px 14px; display:flex; align-items:center; gap:10px; margin-bottom:10px; }
- .wallet-addr { font-family:'Courier New',monospace; font-size:11px; color:var(--white); flex:1; word-break:break-all; line-height:1.5; }
- .wallet-warning { font-size:11px; color:#ff9999; background:rgba(255,100,100,0.08); border:1px solid rgba(255,100,100,0.2); border-radius:6px; padding:10px 14px; line-height:1.5; }
- .txid-group { margin-bottom:20px; }
- .txid-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--silver); margin-bottom:8px; display:block; }
- .txid-input { width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.3); border-radius:6px; padding:12px 16px; color:var(--white); font-family:'Courier New',monospace; font-size:13px; outline:none; }
- .txid-input:focus { border-color:var(--gold); }
-
- /* Customer details form */
- .customer-form { background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.15); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
- .customer-form-title { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
- .cust-input { width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:11px 14px; color:var(--white); font-family:'Inter',sans-serif; font-size:13px; outline:none; transition:border 0.2s; margin-bottom:12px; }
- .cust-input:focus { border-color:var(--gold); }
- .cust-input::placeholder { color:var(--disabled-text); }
- .cust-input:last-child { margin-bottom:0; }
- /* Email sending status */
- .email-status { display:none; margin-top:14px; padding:12px 16px; border-radius:6px; font-size:12px; line-height:1.6; }
- .email-status.sending { display:block; background:rgba(255,215,0,0.08); border:1px solid rgba(255,215,0,0.2); color:var(--gold); }
- .email-status.sent { display:block; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); color:#69db7c; }
- .email-status.error { display:block; background:rgba(255,100,100,0.08); border:1px solid rgba(255,100,100,0.2); color:#ff9999; }
+@media(max-width:900px){
+nav ul{display:none}
+.payment-layout{grid-template-columns:1fr;gap:40px}
+.footer-inner{grid-template-columns:1fr;gap:40px}
+.stats-strip{gap:30px}
+}
+@media(max-width:600px){
+section,#payment,footer{padding-left:20px;padding-right:20px}
+nav{padding:0 20px}
+.guarantee-strip{padding:30px 20px;gap:30px}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
- <a href="#" class="logo">
- <div>
- <span class="logo-flag">USA</span><span class="logo-number">26</span>
- <span class="logo-tagline">Official Ticket Portal</span>
- </div>
- </a>
- <ul>
- <li><a href="#tickets">Tickets</a></li>
- <li><a href="#payment">Payment</a></li>
- <li><a href="#guarantee">About</a></li>
- <li><a href="#payment" class="nav-cta">Buy Now</a></li>
- </ul>
+<a href="#" class="logo">
+<div>
+<span class="logo-flag">USA</span><span class="logo-number">26</span>
+<span class="logo-tagline">Official Ticket Portal</span>
+</div>
+</a>
+<ul>
+<li><a href="#tickets">Tickets</a></li>
+<li><a href="#payment">Payment</a></li>
+<li><a href="#guarantee">About</a></li>
+<li><a href="#payment" class="nav-cta">Buy Now</a></li>
+</ul>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
- <div class="hero-bg"></div>
- <div class="hero-grid"></div>
- <div class="stars" id="stars"></div>
- <p class="hero-eyebrow" style="position:relative">
- <span></span>FIFA World Cup 2026 · USA · Mexico · Canada<span></span>
- </p>
- <h1 class="hero-title" style="position:relative">
- <span class="usa-word">USA</span>
- <span class="year-word">2026</span>
- </h1>
- <p class="hero-subtitle" style="position:relative">
- Experience the world's greatest sporting event.<br>
- <strong>104 matches. 16 host cities. One chance of a lifetime.</strong>
- </p>
- <div class="hero-badges" style="position:relative">
- <span class="badge"> USA Venues</span>
- <span class="badge"> Mexico Venues</span>
- <span class="badge"> Canada Venues</span>
- <span class="badge"> Instant Delivery</span>
- </div>
- <div class="hero-cta-row" style="position:relative">
- <a href="#tickets" class="btn-primary">Browse Tickets</a>
- <a href="#payment" class="btn-secondary">How to Pay</a>
- </div>
- <div class="scroll-hint">
- <span>Scroll</span>
- <svg width="14" height="14" viewBox="0 0 14 14" fill="white"><path d="M7 2v10M3 9l4 4 4-4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
- </div>
+<div class="hero-bg"></div>
+<div class="hero-grid"></div>
+<div class="stars" id="stars"></div>
+<p class="hero-eyebrow" style="position:relative"><span></span>FIFA World Cup 2026 · USA · Mexico · Canada<span></span></p>
+<h1 class="hero-title" style="position:relative">
+<span class="usa-word">USA</span>
+<span class="year-word">2026</span>
+</h1>
+<p class="hero-subtitle" style="position:relative">Experience the world's greatest sporting event.<br><strong>104 matches. 16 host cities. One chance of a lifetime.</strong></p>
+<div class="hero-badges" style="position:relative">
+<span class="badge">🇺🇸 USA Venues</span>
+<span class="badge">🇲🇽 Mexico Venues</span>
+<span class="badge">🇨🇦 Canada Venues</span>
+<span class="badge">⚡ Instant Delivery</span>
+</div>
+<div class="hero-cta-row" style="position:relative">
+<a href="#tickets" class="btn-primary">Browse Tickets</a>
+<a href="#payment" class="btn-secondary">How to Pay</a>
+</div>
+<div class="scroll-hint">
+<span>Scroll</span>
+<svg width="14" height="14" viewBox="0 0 14 14" fill="white"><path d="M7 2v10M3 9l4 4 4-4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+</div>
 </div>
 
-<!-- STATS STRIP -->
 <div class="stats-strip">
- <div class="stat-item"><div class="stat-num">104</div><div class="stat-label">Total Matches</div></div>
- <div class="stat-item"><div class="stat-num">16</div><div class="stat-label">Host Cities</div></div>
- <div class="stat-item"><div class="stat-num">48</div><div class="stat-label">Nations</div></div>
- <div class="stat-item"><div class="stat-num">15%</div><div class="stat-label">Below Market Price</div></div>
- <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Host Countries</div></div>
+<div class="stat-item"><div class="stat-num">104</div><div class="stat-label">Total Matches</div></div>
+<div class="stat-item"><div class="stat-num">16</div><div class="stat-label">Host Cities</div></div>
+<div class="stat-item"><div class="stat-num">48</div><div class="stat-label">Nations</div></div>
+<div class="stat-item"><div class="stat-num">15%</div><div class="stat-label">Below Market Price</div></div>
+<div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Host Countries</div></div>
 </div>
 
-<!-- TICKETS SECTION -->
 <section id="tickets" class="reveal">
- <div class="tickets-header">
- <div>
- <p class="section-eyebrow">Available Tickets</p>
- <h2 class="section-title">Find Your Match</h2>
- <p class="section-desc">Every seat priced 15% below official FIFA market rates. Secure your place in history.</p>
- </div>
- <div class="savings-pill"> Save up to 15% vs official prices</div>
- </div>
- <div class="category-tabs">
- <button class="tab-btn active" onclick="filterTickets('all',this)">All Matches</button>
- <button class="tab-btn" onclick="filterTickets('group',this)">Group Stage</button>
- <button class="tab-btn" onclick="filterTickets('knockout',this)">Knockout</button>
- <button class="tab-btn" onclick="filterTickets('semifinal',this)">Semi-Final</button>
- <button class="tab-btn" onclick="filterTickets('final',this)">The Final</button>
- </div>
- <div class="tickets-grid" id="ticketsGrid"></div>
+<div class="tickets-header">
+<div>
+<p class="section-eyebrow">Available Tickets</p>
+<h2 class="section-title">Find Your Match</h2>
+<p class="section-desc">Every seat priced 15% below official FIFA market rates. Choose your seating category.</p>
+</div>
+<div class="savings-pill">💰 Save up to 15% vs official prices</div>
+</div>
+<div class="category-tabs">
+<button class="tab-btn active" onclick="filterTickets('all',this)">All Matches</button>
+<button class="tab-btn" onclick="filterTickets('group',this)">Group Stage</button>
+<button class="tab-btn" onclick="filterTickets('knockout',this)">Knockout</button>
+<button class="tab-btn" onclick="filterTickets('semifinal',this)">Semi-Final</button>
+<button class="tab-btn" onclick="filterTickets('final',this)">The Final</button>
+</div>
+<div class="tickets-grid" id="ticketsGrid"></div>
 </section>
 
-<!-- GUARANTEE STRIP -->
 <div class="guarantee-strip" id="guarantee">
- <div class="guarantee-item"><div class="guarantee-icon"> </div><div class="guarantee-text"><strong>Secure Checkout</strong><span>All transactions verified and protected end-to-end</span></div></div>
- <div class="guarantee-item"><div class="guarantee-icon"> </div><div class="guarantee-text"><strong>Instant Delivery</strong><span>Tickets sent to your email within 24 hours</span></div></div>
- <div class="guarantee-item"><div class="guarantee-icon"> </div><div class="guarantee-text"><strong>100% Authentic</strong><span>Every ticket verified against FIFA's official database</span></div></div>
- <div class="guarantee-item"><div class="guarantee-icon"> </div><div class="guarantee-text"><strong>24/7 Support</strong><span>Live chat and email support before and during the event</span></div></div>
+<div class="guarantee-item"><div class="guarantee-icon">🔒</div><div class="guarantee-text"><strong>Secure Checkout</strong><span>All transactions verified and protected end-to-end</span></div></div>
+<div class="guarantee-item"><div class="guarantee-icon">⚡</div><div class="guarantee-text"><strong>Instant Delivery</strong><span>Tickets sent to your email within 24 hours</span></div></div>
+<div class="guarantee-item"><div class="guarantee-icon">✅</div><div class="guarantee-text"><strong>100% Authentic</strong><span>Every ticket verified against FIFA's official database</span></div></div>
+<div class="guarantee-item"><div class="guarantee-icon">💬</div><div class="guarantee-text"><strong>24/7 Support</strong><span>Live chat and email support before and during the event</span></div></div>
 </div>
 
-<!-- PAYMENT SECTION -->
 <div id="payment">
- <div>
- <p class="section-eyebrow">Checkout</p>
- <h2 class="section-title">Payment Options</h2>
- <p class="section-desc">Crypto payments are live and accepted. Bank transfer and card payment options are currently unavailable.</p>
- <div class="payment-layout">
- <!-- Left: Method selector -->
- <div>
- <div class="payment-methods">
- <!-- CRYPTO ACTIVE -->
- <div class="pay-method active selected-method" id="cryptoMethodBtn" onclick="switchPayment('crypto')">
- <div class="pay-icon crypto">₿</div>
- <div class="pay-info">
- <div class="pay-name">Cryptocurrency</div>
- <div class="pay-desc">BTC · ETH · USDT · BNB</div>
- </div>
- <div class="pay-badge-active">✓ Live</div>
- </div>
- <!-- BANK INACTIVE -->
- <div class="pay-method inactive" id="bankMethodBtn" onclick="switchPayment('bank')" title="Click to view">
- <div class="pay-icon bank"> </div>
- <div class="pay-info">
- <div class="pay-name">Bank Transfer</div>
- <div class="pay-desc">SWIFT · SEPA · Wire Transfer</div>
- </div>
- <div class="pay-badge-unavail">Unavailable</div>
- </div>
- <!-- CARD -->
- <div class="pay-method inactive" id="cardMethodBtn" onclick="switchPayment('card')" title="Click to view">
- <div class="pay-icon card"> </div>
- <div class="pay-info">
- <div class="pay-name">Card Payment</div>
- <div class="pay-desc">Visa · Mastercard · Amex</div>
- </div>
- <div class="pay-badge-unavail">Unavailable</div>
- </div>
- </div>
- <div style="margin-top:28px;padding:20px;background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.15);border-radius:8px;">
- <p style="font-size:12px;color:var(--silver);line-height:1.8;">
- <strong style="color:var(--green-bright);display:block;margin-bottom:8px;font-family:'Oswald',sans-serif;letter-spacing:1px;">WHY CRYPTO?</strong>
- Fast settlement · Zero chargebacks · Available worldwide · No currency conversion fees · Full payment privacy
- </p>
- </div>
- </div>
- <!-- Right: Crypto panel -->
- <div class="crypto-panel">
- <div class="crypto-panel-header">
- <span style="font-size:22px">₿</span>
- <h3>Pay with Crypto</h3>
- </div>
- <div class="crypto-selector">
- <button class="crypto-btn selected" onclick="selectCoin('BTC',this)">₿ BTC</button>
- <button class="crypto-btn" onclick="selectCoin('ETH',this)">Ξ ETH</button>
- <button class="crypto-btn" onclick="selectCoin('USDT',this)">₮ USDT</button>
- <button class="crypto-btn" onclick="selectCoin('BNB',this)">⬡ BNB</button>
- </div>
- <div class="crypto-address-area">
- <p class="address-label" id="coinLabel">Bitcoin (BTC) Wallet Address</p>
- <div class="address-box">
- <div class="address-text" id="walletAddress">bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky</div>
- <button class="copy-btn" onclick="copyAddress()">Copy</button>
- </div>
- <div class="crypto-notice">
- <strong> Important:</strong> Send only <span id="coinNetwork">BTC on the Bitcoin network</span> to this address. Sending any other asset will result in permanent loss of funds.
- </div>
- </div>
- <div class="send-instructions">
- <p style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">How It Works</p>
- <ol class="steps-list">
- <li><div class="step-num">1</div><span>Select your tickets above and note the total amount</span></li>
- <li><div class="step-num">2</div><span>Send the exact USD equivalent in crypto to the wallet address shown</span></li>
- <li><div class="step-num">3</div><span>Email your transaction hash/ID to <strong style="color:var(--white)" id="supportEmail">support@usa26tickets.com</strong></span></li>
- <li><div class="step-num">4</div><span>Your tickets will be confirmed and delivered within 24 hours</span></li>
- </ol>
- </div>
- </div>
-
- <!-- BANK TRANSFER PANEL -->
- <div class="bank-panel" id="bankPanel">
- <div class="bank-panel-header">
- <span style="font-size:22px"> </span>
- <h3>Bank Transfer</h3>
- </div>
- <div class="form-panel-body">
- <div class="bank-ref-box">
- <div class="bank-ref-label">Your Payment Reference</div>
- <div class="bank-ref-value">USA26-TKT-2026</div>
- </div>
- <div class="form-group">
- <label class="form-label">Account Name</label>
- <input class="form-input" type="text" value="USA26 Tickets Ltd" readonly>
- </div>
- <div class="form-group">
- <label class="form-label">Bank Name</label>
- <input class="form-input" type="text" value="Chase Bank, N.A." readonly>
- </div>
- <div class="form-row">
- <div class="form-group">
- <label class="form-label">Routing Number</label>
- <input class="form-input" type="text" value="•••••••••" readonly>
- </div>
- <div class="form-group">
- <label class="form-label">Account Number</label>
- <input class="form-input" type="text" value="•••••••••••" readonly>
- </div>
- </div>
- <div class="form-group">
- <label class="form-label">SWIFT / BIC Code</label>
- <input class="form-input" type="text" value="CHASUS33XXX" readonly>
- </div>
- <div class="form-group">
- <label class="form-label">Amount to Send (USD)</label>
- <input class="form-input" type="text" placeholder="Enter your ticket total e.g. $850.00">
- </div>
- <button class="form-submit-btn" onclick="showUnavailAlert('bankAlert')">Confirm Bank Transfer →</button>
- <div class="unavail-alert" id="bankAlert">
- <strong> Bank Transfer Temporarily Unavailable</strong>
- Bank transfer payments are currently offline for maintenance. Please use Cryptocurrency to complete your purchase — it's fast, secure and instant.
- </div>
- </div>
- </div>
-
- <!-- CARD PAYMENT PANEL -->
- <div class="card-panel" id="cardPanel">
- <div class="card-panel-header">
- <span style="font-size:22px"> </span>
- <h3>Card Payment</h3>
- </div>
- <div class="form-panel-body">
- <div class="card-visual" id="cardVisual">
- <div class="card-chip"></div>
- <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
- <div class="card-bottom">
- <div>
- <div class="card-holder-label">Card Holder</div>
- <div class="card-holder-name" id="cardNameDisplay">YOUR NAME</div>
- </div>
- <div>
- <div class="card-expiry-label">Expires</div>
- <div class="card-expiry-val" id="cardExpDisplay">MM/YY</div>
- </div>
- </div>
- <div class="card-brand"> </div>
- </div>
- <div class="form-group">
- <label class="form-label">Cardholder Name</label>
- <input class="form-input" type="text" placeholder="John Smith" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'">
- </div>
- <div class="form-group">
- <label class="form-label">Card Number</label>
- <input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19"
- oninput="let v=this.value.replace(/\D/g,'').substring(0,16);this.value=v.replace(/(.{4})/g,'$1 ').trim();document.getElementById('cardNumDisplay').textContent=v.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim().replace(/[0-9]/g,'•')">
- </div>
- <div class="form-row">
- <div class="form-group">
- <label class="form-label">Expiry Date</label>
- <input class="form-input" type="text" placeholder="MM/YY" maxlength="5"
- oninput="let v=this.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);this.value=v;document.getElementById('cardExpDisplay').textContent=this.value||'MM/YY'">
- </div>
- <div class="form-group">
- <label class="form-label">CVV</label>
- <input class="form-input" type="password" placeholder="•••" maxlength="4">
- </div>
- </div>
- <div class="form-group">
- <label class="form-label">Amount (USD)</label>
- <input class="form-input" type="text" placeholder="Enter your ticket total e.g. $850.00">
- </div>
- <button class="form-submit-btn" onclick="showUnavailAlert('cardAlert')">Pay Now →</button>
- <div class="unavail-alert" id="cardAlert">
- <strong> Card Payments Temporarily Unavailable</strong>
- Card processing is currently offline for maintenance. Please use Cryptocurrency to complete your purchase — it's fast, secure and instant.
- </div>
- </div>
- </div>
-
- </div>
- </div>
+<div>
+<p class="section-eyebrow">Checkout</p>
+<h2 class="section-title">Payment Options</h2>
+<p class="section-desc">Crypto payments are live and accepted. Bank transfer and card payment options are currently unavailable.</p>
+<div class="payment-layout">
+<div>
+<div class="payment-methods">
+<div class="pay-method active selected-method" id="cryptoMethodBtn" onclick="switchPayment('crypto')">
+<div class="pay-icon crypto">₿</div>
+<div class="pay-info"><div class="pay-name">Cryptocurrency</div><div class="pay-desc">BTC · ETH · USDT · BNB</div></div>
+<div class="pay-badge-active">✓ Live</div>
+</div>
+<div class="pay-method inactive" id="bankMethodBtn" onclick="switchPayment('bank')">
+<div class="pay-icon bank">🏦</div>
+<div class="pay-info"><div class="pay-name">Bank Transfer</div><div class="pay-desc">SWIFT · SEPA · Wire Transfer</div><div class="unavail-tooltip">Currently unavailable</div></div>
+<div class="pay-badge-unavail">Unavailable</div>
+</div>
+<div class="pay-method inactive" id="cardMethodBtn" onclick="switchPayment('card')">
+<div class="pay-icon card">💳</div>
+<div class="pay-info"><div class="pay-name">Card Payment</div><div class="pay-desc">Visa · Mastercard · Amex</div><div class="unavail-tooltip">Currently unavailable</div></div>
+<div class="pay-badge-unavail">Unavailable</div>
+</div>
+</div>
+<div style="margin-top:28px;padding:20px;background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.15);border-radius:8px">
+<p style="font-size:12px;color:var(--silver);line-height:1.8"><strong style="color:var(--green-bright);display:block;margin-bottom:8px;font-family:'Oswald',sans-serif;letter-spacing:1px">WHY CRYPTO?</strong>Fast settlement · Zero chargebacks · Available worldwide · No currency conversion fees · Full payment privacy</p>
+</div>
 </div>
 
-<!-- FOOTER -->
+<div>
+<!-- CRYPTO PANEL -->
+<div class="crypto-panel active-panel" id="cryptoPanel">
+<div class="crypto-panel-header"><span style="font-size:22px">₿</span><h3>Pay with Crypto</h3></div>
+<div class="crypto-selector">
+<button class="crypto-btn selected" onclick="selectCoin('BTC',this)">₿ BTC</button>
+<button class="crypto-btn" onclick="selectCoin('ETH',this)">Ξ ETH</button>
+<button class="crypto-btn" onclick="selectCoin('USDT',this)">₮ USDT</button>
+<button class="crypto-btn" onclick="selectCoin('BNB',this)">⬡ BNB</button>
+</div>
+<div class="crypto-address-area">
+<p class="address-label" id="coinLabel">Bitcoin (BTC) Wallet Address</p>
+<div class="address-box">
+<div class="address-text" id="walletAddress">bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky</div>
+<button class="copy-btn" onclick="copyAddress()">Copy</button>
+</div>
+<div class="crypto-notice"><strong>⚠️ Important:</strong> Send only <span id="coinNetwork">BTC on the Bitcoin network</span> to this address. Sending any other asset will result in permanent loss of funds.</div>
+</div>
+<div class="send-instructions">
+<p style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px">How It Works</p>
+<ol class="steps-list">
+<li><div class="step-num">1</div><span>Select your tickets above and note the total amount</span></li>
+<li><div class="step-num">2</div><span>Send the exact USD equivalent in crypto to the wallet address shown</span></li>
+<li><div class="step-num">3</div><span>Email your transaction hash/ID to <strong style="color:var(--white)">support@usa26tickets.com</strong></span></li>
+<li><div class="step-num">4</div><span>Your tickets will be confirmed and delivered within 24 hours</span></li>
+</ol>
+</div>
+</div>
+
+<!-- BANK PANEL -->
+<div class="bank-panel" id="bankPanel">
+<div class="bank-panel-header"><span style="font-size:22px">🏦</span><h3>Bank Transfer</h3></div>
+<div class="form-panel-body">
+<div class="bank-ref-box"><div class="bank-ref-label">Payment Reference</div><div class="bank-ref-value">USA26-TKT-2026</div></div>
+<div class="form-group"><label class="form-label">Account Name</label><input class="form-input" type="text" value="USA26 Tickets Ltd" readonly></div>
+<div class="form-group"><label class="form-label">Bank Name</label><input class="form-input" type="text" value="Chase Bank, N.A." readonly></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Routing Number</label><input class="form-input" type="text" value="•••••••••" readonly></div>
+<div class="form-group"><label class="form-label">Account Number</label><input class="form-input" type="text" value="•••••••••••" readonly></div>
+</div>
+<div class="form-group"><label class="form-label">SWIFT / BIC</label><input class="form-input" type="text" value="CHASUS33XXX" readonly></div>
+<div class="form-group"><label class="form-label">Amount (USD)</label><input class="form-input" type="text" placeholder="Enter your ticket total"></div>
+<button class="form-submit-btn" onclick="showUnavailAlert('bankAlert')">Confirm Bank Transfer →</button>
+<div class="unavail-alert" id="bankAlert"><strong>⚠️ Bank Transfer Temporarily Unavailable</strong> Please use Cryptocurrency to complete your purchase.</div>
+</div>
+</div>
+
+<!-- CARD PANEL -->
+<div class="card-panel" id="cardPanel">
+<div class="card-panel-header"><span style="font-size:22px">💳</span><h3>Card Payment</h3></div>
+<div class="form-panel-body">
+<div class="card-visual">
+<div class="card-chip"></div>
+<div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+<div class="card-bottom">
+<div><div class="card-holder-label">Card Holder</div><div class="card-holder-name" id="cardNameDisplay">YOUR NAME</div></div>
+<div><div class="card-expiry-label">Expires</div><div class="card-expiry-val" id="cardExpDisplay">MM/YY</div></div>
+</div>
+</div>
+<div class="form-group"><label class="form-label">Cardholder Name</label><input class="form-input" type="text" placeholder="John Smith" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'"></div>
+<div class="form-group"><label class="form-label">Card Number</label><input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="let v=this.value.replace(/\D/g,'').substring(0,16);this.value=v.replace(/(.{4})/g,'$1 ').trim();document.getElementById('cardNumDisplay').textContent=v.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim()"></div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Expiry</label><input class="form-input" type="text" placeholder="MM/YY" maxlength="5" oninput="let v=this.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);this.value=v;document.getElementById('cardExpDisplay').textContent=this.value||'MM/YY'"></div>
+<div class="form-group"><label class="form-label">CVV</label><input class="form-input" type="password" placeholder="•••" maxlength="4"></div>
+</div>
+<div class="form-group"><label class="form-label">Amount (USD)</label><input class="form-input" type="text" placeholder="Enter your ticket total"></div>
+<button class="form-submit-btn" onclick="showUnavailAlert('cardAlert')">Pay Now →</button>
+<div class="unavail-alert" id="cardAlert"><strong>⚠️ Card Payments Temporarily Unavailable</strong> Please use Cryptocurrency to complete your purchase.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
 <footer>
- <div class="footer-inner">
- <div class="footer-brand">
- <div style="display:flex;align-items:center;gap:8px">
- <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;background:repeating-linear-gradient(180deg,#B22234 0px,#B22234 5px,#fff 5px,#fff 10px);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">USA</span>
- <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)">26</span>
- </div>
- <p>Your trusted portal for 2026 FIFA World Cup tickets. Experience the greatest football tournament on Earth — across three nations and 16 iconic stadiums.</p>
- </div>
- <div class="footer-col">
- <h4>Quick Links</h4>
- <ul>
- <li><a href="#tickets">Browse Tickets</a></li>
- <li><a href="#payment">Payment Info</a></li>
- <li><a href="#guarantee">Guarantee</a></li>
- </ul>
- </div>
- <div class="footer-col">
- <h4>Support</h4>
- <ul>
- <li><a href="#">Contact Us</a></li>
- <li><a href="#">FAQ</a></li>
- <li><a href="#">Refund Policy</a></li>
- <li><a href="#">Terms of Service</a></li>
- </ul>
- </div>
- </div>
- <div class="footer-bottom">
- <p>© 2026 USA26 Ticket Portal. All rights reserved.</p>
- <p> Secure · Verified · Trusted</p>
- </div>
- <p class="footer-disclaimer">USA26 is an independent ticket resale and marketplace platform. We are not affiliated with or endorsed by FIFA, US Soccer, or any official organizing body. All trademarks belong to their respective owners. Ticket prices reflect current market conditions and are subject to change.</p>
+<div class="footer-inner">
+<div class="footer-brand">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-family:'Bebas Neue',sans-serif;font-size:28px;background:repeating-linear-gradient(180deg,#B22234 0px,#B22234 5px,#fff 5px,#fff 10px);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent">USA</span>
+<span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)">26</span>
+</div>
+<p>Your trusted portal for 2026 FIFA World Cup tickets. Experience the greatest football tournament on Earth across three nations and 16 iconic stadiums.</p>
+</div>
+<div class="footer-col"><h4>Quick Links</h4><ul><li><a href="#tickets">Browse Tickets</a></li><li><a href="#payment">Payment Info</a></li><li><a href="#guarantee">Guarantee</a></li></ul></div>
+<div class="footer-col"><h4>Support</h4><ul><li><a href="#">Contact Us</a></li><li><a href="#">FAQ</a></li><li><a href="#">Refund Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 USA26 Ticket Portal. All rights reserved.</p>
+<p>🔒 Secure · Verified · Trusted</p>
+</div>
+<p class="footer-disclaimer">USA26 is an independent ticket resale and marketplace platform. We are not affiliated with or endorsed by FIFA, US Soccer, or any official organizing body.</p>
 </footer>
 
-<!-- PURCHASE MODAL -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
- <div class="modal">
- <div class="modal-header" id="modalHeader">
- <div>
- <h2 id="modalTitle">Match Ticket</h2>
- <div class="match-info" id="modalMatchInfo"></div>
- </div>
- <button class="modal-close" onclick="closeModal()">×</button>
- </div>
- <div class="modal-body">
-
- <!-- STEP 1: Select Quantity -->
- <div id="step1">
- <div class="step-indicator">
- <div class="step-dot active">1</div>
- <div class="step-line"></div>
- <div class="step-dot">2</div>
- <div class="step-line"></div>
- <div class="step-dot">3</div>
- </div>
- <p class="step-title">Select Quantity</p>
- <div class="qty-row">
- <span class="qty-label">Number of Tickets</span>
- <div class="qty-controls">
- <button class="qty-btn" onclick="changeQty(-1)">−</button>
- <div class="qty-num" id="qtyNum">1</div>
- <button class="qty-btn" onclick="changeQty(1)">+</button>
- </div>
- </div>
- <div class="modal-total">
- <span>Total</span>
- <strong id="modalTotal">$0</strong>
- </div>
- <button class="modal-cta" onclick="goToStep2()">Proceed to Payment →</button>
- <p class="modal-note">You will be shown the wallet address to send payment to.</p>
- </div>
-
- <!-- STEP 2: Make Payment -->
- <div id="step2" style="display:none">
- <div class="step-indicator">
- <div class="step-dot done">✓</div>
- <div class="step-line active-line"></div>
- <div class="step-dot active">2</div>
- <div class="step-line"></div>
- <div class="step-dot">3</div>
- </div>
- <p class="step-title">Send Crypto Payment</p>
- <div class="step2-summary">
- <div class="step2-match" id="step2Match"></div>
- <div class="step2-amount">Send exactly: <strong id="step2Amount"></strong></div>
- </div>
- <div class="coin-tabs">
- <button class="coin-tab active" onclick="switchCoin('BTC',this)">₿ BTC</button>
- <button class="coin-tab" onclick="switchCoin('ETH',this)">Ξ ETH</button>
- <button class="coin-tab" onclick="switchCoin('USDT',this)">₮ USDT</button>
- <button class="coin-tab" onclick="switchCoin('BNB',this)">⬡ BNB</button>
- </div>
- <div class="wallet-display">
- <div class="wallet-label" id="modalCoinLabel">Send BTC to this address:</div>
- <div class="wallet-box">
- <div class="wallet-addr" id="modalWalletAddr">bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky</div>
- <button class="copy-btn" onclick="copyModalAddr()">Copy</button>
- </div>
- <div class="wallet-warning"> Send only <span id="modalCoinNet">BTC on Bitcoin network</span>. Wrong network = permanent loss.</div>
- </div>
- <div class="customer-form">
- <div class="customer-form-title"> Where should we send your confirmation?</div>
- <input type="text" id="custName" class="cust-input" placeholder="Your Full Name">
- <input type="email" id="custEmail" class="cust-input" placeholder="Your Email Address">
- </div>
- <div class="txid-group">
- <label class="txid-label">Paste Your Transaction ID / Hash</label>
- <input type="text" id="txidInput" class="txid-input" placeholder="e.g. 0x4f3a8b2c1d...">
- <p style="font-size:11px;color:var(--silver);margin-top:6px;">Find this in your crypto wallet after sending payment.</p>
- </div>
- <button class="modal-cta" style="background:var(--gold);color:var(--navy)" onclick="goToStep3()">I Have Made Payment ✓</button>
- <div class="email-status" id="emailStatus"></div>
- <p class="modal-note" style="color:#ff9999">Do not click above until you have actually sent the payment.</p>
- </div>
-
- <!-- STEP 3: Confirmation -->
- <div id="step3" style="display:none">
- <div class="step-indicator">
- <div class="step-dot done">✓</div>
- <div class="step-line active-line"></div>
- <div class="step-dot done">✓</div>
- <div class="step-line active-line"></div>
- <div class="step-dot active">3</div>
- </div>
- <p class="step-title">Booking Confirmed!</p>
- <div class="confirm-box show" id="confirmBox">
- <div class="confirm-header">
- <span> </span>
- <span>Payment Received — Ticket Booked!</span>
- </div>
- <div class="confirm-body">
- <p>Dear <span id="confirmName">Customer</span>,</p>
- <p style="margin-top:10px;">Thank you for your booking with <strong style="color:#fff">USA26 Ticket Portal</strong>. Your ticket has been successfully booked.</p>
- <div class="confirm-code" id="confirmCode">XGH-65JJ-#</div>
- <p>Upon arrival at the stadium, please present this confirmation code to the attendant to receive your admission pass.</p>
- <p style="margin-top:10px;"><strong style="color:#fff">Match:</strong> <span id="confirmMatch"></span></p>
- <p><strong style="color:#fff">Tickets:</strong> <span id="confirmQty"></span></p>
- <p><strong style="color:#fff">Total Paid:</strong> <span id="confirmTotal"></span></p>
- <p><strong style="color:#fff">Transaction ID:</strong> <span id="confirmTxid" style="font-family:monospace;font-size:11px;word-break:break-all;color:#aaa"></span></p>
- <p style="margin-top:10px;">A copy of this confirmation has been sent to your email. Your tickets will be delivered within <strong style="color:#fff">24 hours</strong> of payment verification.</p>
- <div class="confirm-note"> Keep your confirmation code safe. Do not share it with anyone. Contact <strong style="color:#22c55e">support@usa26tickets.com</strong> for any issues.</div>
- </div>
- </div>
- </div>
-
- </div>
- </div>
+<div class="modal">
+<div class="modal-header" id="modalHeader">
+<div><h2 id="modalTitle">Match Ticket</h2><div class="match-info" id="modalMatchInfo"></div></div>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<div class="modal-body">
+<!-- STEP 1 -->
+<div id="step1">
+<div class="step-indicator">
+<div class="step-dot active">1</div><div class="step-line"></div>
+<div class="step-dot">2</div><div class="step-line"></div>
+<div class="step-dot">3</div>
+</div>
+<p class="step-title">Select Quantity</p>
+<div class="qty-row">
+<span class="qty-label">Number of Tickets</span>
+<div class="qty-controls">
+<button class="qty-btn" onclick="changeQty(-1)">−</button>
+<div class="qty-num" id="qtyNum">1</div>
+<button class="qty-btn" onclick="changeQty(1)">+</button>
+</div>
+</div>
+<div class="modal-total"><span>Total</span><strong id="modalTotal">$0</strong></div>
+<button class="modal-cta" onclick="goToStep2()">Proceed to Payment →</button>
+<p class="modal-note">You will be shown the wallet address to send payment to.</p>
+</div>
+<!-- STEP 2 -->
+<div id="step2" style="display:none">
+<div class="step-indicator">
+<div class="step-dot done">✓</div><div class="step-line active-line"></div>
+<div class="step-dot active">2</div><div class="step-line"></div>
+<div class="step-dot">3</div>
+</div>
+<p class="step-title">Send Crypto Payment</p>
+<div class="step2-summary">
+<div class="step2-match" id="step2Match"></div>
+<div class="step2-amount" id="step2Amount"></div>
+</div>
+<div class="coin-tabs">
+<button class="coin-tab active" onclick="switchCoin('BTC',this)">₿ BTC</button>
+<button class="coin-tab" onclick="switchCoin('ETH',this)">Ξ ETH</button>
+<button class="coin-tab" onclick="switchCoin('USDT',this)">₮ USDT</button>
+<button class="coin-tab" onclick="switchCoin('BNB',this)">⬡ BNB</button>
+</div>
+<div class="wallet-display">
+<div class="wallet-label" id="modalCoinLabel">Send BTC to this address:</div>
+<div class="wallet-box">
+<div class="wallet-addr" id="modalWalletAddr">bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky</div>
+<button class="copy-btn" onclick="copyModalAddr()">Copy</button>
+</div>
+<div class="wallet-warning">⚠️ Send only <span id="modalCoinNet">BTC on Bitcoin network</span>. Wrong network = permanent loss.</div>
+</div>
+<div class="customer-form">
+<div class="customer-form-title">📧 Where should we send your confirmation?</div>
+<input type="text" id="custName" class="cust-input" placeholder="Your Full Name">
+<input type="email" id="custEmail" class="cust-input" placeholder="Your Email Address">
+</div>
+<div class="txid-group">
+<label class="txid-label">Paste Your Transaction ID / Hash</label>
+<input type="text" id="txidInput" class="txid-input" placeholder="e.g. 0x4f3a8b2c1d...">
+<p style="font-size:11px;color:var(--silver);margin-top:6px">Find this in your crypto wallet after sending payment.</p>
+</div>
+<button class="modal-cta" style="background:var(--gold);color:var(--navy)" onclick="goToStep3()">I Have Made Payment ✓</button>
+<div class="email-status" id="emailStatus"></div>
+<p class="modal-note" style="color:#ff9999">Do not click above until you have actually sent the payment.</p>
+</div>
+<!-- STEP 3 -->
+<div id="step3" style="display:none">
+<div class="step-indicator">
+<div class="step-dot done">✓</div><div class="step-line active-line"></div>
+<div class="step-dot done">✓</div><div class="step-line active-line"></div>
+<div class="step-dot active">3</div>
+</div>
+<p class="step-title">Booking Confirmed!</p>
+<div class="confirm-box show">
+<div class="confirm-header"><span>✅</span><span>Payment Received — Ticket Booked!</span></div>
+<div class="confirm-body">
+<p>Dear <span id="confirmName">Customer</span>,</p>
+<p style="margin-top:10px">Thank you for your booking with <strong style="color:#fff">USA26 Ticket Portal</strong>. Your ticket has been successfully booked.</p>
+<div class="confirm-code" id="confirmCode"></div>
+<p>Upon arrival at the stadium, please present this confirmation code to the attendant to receive your admission pass.</p>
+<p style="margin-top:10px"><strong style="color:#fff">Match:</strong> <span id="confirmMatch"></span></p>
+<p><strong style="color:#fff">Tickets:</strong> <span id="confirmQty"></span></p>
+<p><strong style="color:#fff">Total Paid:</strong> <span id="confirmTotal"></span></p>
+<p><strong style="color:#fff">Transaction ID:</strong> <span id="confirmTxid" style="font-family:monospace;font-size:11px;word-break:break-all;color:#aaa"></span></p>
+<p style="margin-top:10px">Your tickets will be delivered within <strong style="color:#fff">24 hours</strong> of payment verification.</p>
+<div class="confirm-note">🔒 Keep your confirmation code safe. Contact <strong style="color:#22c55e">support@usa26tickets.com</strong> for any issues.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <script>
- const tickets = [
- // GROUP STAGE — Featured nations
- { id:1, teams:" Portugal vs Czechia", stage:"group", venue:"SoFi Stadium, Los Angeles", date:"Jun 14, 2026", category:"Cat 1", official:720, tag:"hot" },
- { id:2, teams:" Argentina vs Chile", stage:"group", venue:"MetLife Stadium, New York", date:"Jun 15, 2026", category:"Cat 1", official:890, tag:"limited" },
- { id:3, teams:" France vs Belgium", stage:"group", venue:"AT&T Stadium, Dallas", date:"Jun 16, 2026", category:"Cat 1", official:760, tag:"limited" },
- { id:4, teams:" Brazil vs Mexico", stage:"group", venue:"Rose Bowl, Los Angeles", date:"Jun 17, 2026", category:"Cat 1", official:850, tag:"hot" },
- { id:5, teams:" USA vs Paraguay", stage:"group", venue:"SoFi Stadium, Los Angeles", date:"Jun 18, 2026", category:"Cat 2", official:560, tag:"hot" },
- { id:6, teams:" Germany vs Argentina", stage:"group", venue:"Levi's Stadium, San Francisco", date:"Jun 19, 2026", category:"Cat 2", official:940, tag:"limited" },
- { id:7, teams:" Mexico vs South Africa", stage:"group", venue:"Estadio Azteca, Mexico City", date:"Jun 11, 2026", category:"Cat 3", official:370, tag:"available" },
- { id:8, teams:" Canada vs Bosnia-Herz.", stage:"group", venue:"BMO Field, Toronto", date:"Jun 12, 2026", category:"Cat 3", official:355, tag:"available" },
- { id:19, teams:" Canada vs Croatia", stage:"group", venue:"BMO Field, Toronto", date:"Jun 17, 2026", category:"Cat 2", official:420, tag:"available" },
- { id:20, teams:" Canada vs Morocco", stage:"group", venue:"BMO Field, Toronto", date:"Jun 22, 2026", category:"Cat 2", official:420, tag:"available" },
- { id:21, teams:"Group Stage Match — Vancouver", stage:"group", venue:"BC Place, Vancouver", date:"Jun 13, 2026", category:"Cat 2", official:390, tag:"available" },
- { id:22, teams:"Group Stage Match — Vancouver", stage:"group", venue:"BC Place, Vancouver", date:"Jun 18, 2026", category:"Cat 2", official:390, tag:"available" },
- { id:23, teams:"Group Stage Match — Vancouver", stage:"group", venue:"BC Place, Vancouver", date:"Jun 23, 2026", category:"Cat 3", official:355, tag:"available" },
- { id:24, teams:"Round of 32 — Toronto", stage:"knockout", venue:"BMO Field, Toronto", date:"Jul 2, 2026", category:"Cat 1", official:1100, tag:"available" },
- { id:25, teams:"Round of 32 — Vancouver", stage:"knockout", venue:"BC Place, Vancouver", date:"Jul 3, 2026", category:"Cat 1", official:1100, tag:"available" },
- { id:9, teams:" England vs France", stage:"group", venue:"Hard Rock Stadium, Miami", date:"Jun 20, 2026", category:"Cat 1", official:780, tag:"limited" },
- // KNOCKOUT
- { id:10, teams:"Round of 32 — Portugal/TBD", stage:"knockout", venue:"Hard Rock Stadium, Miami", date:"Jul 2, 2026", category:"Cat 1", official:1200, tag:"available" },
- { id:11, teams:"Round of 16 — Brazil/TBD", stage:"knockout", venue:"Rose Bowl, Los Angeles", date:"Jul 6, 2026", category:"Cat 1", official:1500, tag:"available" },
- { id:12, teams:"Quarter-Final — France/TBD", stage:"knockout", venue:"NRG Stadium, Houston", date:"Jul 10, 2026", category:"Cat 1", official:2200, tag:"limited" },
- { id:13, teams:"Quarter-Final — Argentina/TBD", stage:"knockout", venue:"AT&T Stadium, Dallas", date:"Jul 11, 2026", category:"Cat 1", official:2350, tag:"limited" },
- // SEMI-FINAL
- { id:14, teams:"Semi-Final 1 — TBD", stage:"semifinal",venue:"AT&T Stadium, Dallas", date:"Jul 14, 2026", category:"Cat 1", official:3200, tag:"limited" },
- { id:15, teams:"Semi-Final 2 — TBD", stage:"semifinal",venue:"Rose Bowl, Los Angeles", date:"Jul 15, 2026", category:"Cat 1", official:3400, tag:"limited" },
- // FINAL
- { id:16, teams:" THE FINAL", stage:"final", venue:"MetLife Stadium, New Jersey", date:"Jul 19, 2026", category:"Cat 1", official:6370, tag:"hot" },
- { id:17, teams:" THE FINAL", stage:"final", venue:"MetLife Stadium, New Jersey", date:"Jul 19, 2026", category:"Cat 2", official:4200, tag:"limited" },
- { id:18, teams:" THE FINAL", stage:"final", venue:"MetLife Stadium, New Jersey", date:"Jul 19, 2026", category:"Cat 3", official:2030, tag:"available" },
- ];
+// ── PRICING ENGINE ──
+var primeVenues = ['MetLife Stadium','SoFi Stadium','AT&T Stadium','Rose Bowl'];
+var premiumNations = ['Brazil','Portugal','USA','Argentina','France','England','Spain'];
 
- function ourPrice(p){ return Math.round(p * 0.85); }
- function tagHTML(t){
- if(t==='hot') return `<span class="limited-tag"> High Demand</span>`;
- if(t==='limited') return `<span class="limited-tag"> Limited</span>`;
- return `<span class="available-tag">✓ Available</span>`;
- }
- function stageLabel(s){ return {group:'Group Stage',knockout:'Knockout',semifinal:'Semi-Final',final:'The Final'}[s]||s; }
+function venueBonus(venue){ return primeVenues.some(function(v){return venue.indexOf(v)>=0;}) ? 1.04 : 1.0; }
+function nationBonus(teams){ return premiumNations.some(function(n){return teams.indexOf(n)>=0;}) ? 1.05 : 1.0; }
+function calcPrice(base,venue,teams,mult){ return Math.round(base * venueBonus(venue) * nationBonus(teams) * mult); }
+function ourPrice(p){ return Math.round(p * 0.85); }
 
- function renderTickets(filter='all'){
- const grid = document.getElementById('ticketsGrid');
- const list = filter==='all' ? tickets : tickets.filter(t=>t.stage===filter);
- grid.innerHTML = list.map(t => {
- const op = ourPrice(t.official);
- return `<div class="ticket-card">
- <div class="ticket-accent-bar"></div>
- <div class="ticket-badge-row"><span class="match-label">${stageLabel(t.stage)}</span>${tagHTML(t.tag)}</div>
- <div class="ticket-body">
- <div class="ticket-teams">${t.teams}</div>
- <div class="ticket-meta"><span> ${t.venue}</span><span> ${t.date}</span><span> ${t.category}</span></div>
- </div>
- <hr class="ticket-perf">
- <div class="ticket-price-row">
- <div class="price-info">
- <div class="original-price">Official: $${t.official.toLocaleString()}</div>
- <div class="our-price"><sup>$</sup>${op.toLocaleString()}</div>
- <div class="save-label">You save $${(t.official-op).toLocaleString()}</div>
- </div>
- <button class="ticket-buy-btn" onclick="openModal(${t.id})">Buy Now</button>
- </div>
- </div>`;
- }).join('');
- }
+// ── MATCHES (base = VIP front cat 1 price) ──
+var matches = [
+{id:1, teams:"Portugal vs Czechia", stage:"group", venue:"SoFi Stadium, Los Angeles", date:"2026-06-14", dateLabel:"Jun 14, 2026", tag:"hot"},
+{id:2, teams:"Argentina vs Chile", stage:"group", venue:"MetLife Stadium, New York", date:"2026-06-15", dateLabel:"Jun 15, 2026", tag:"hot", base:2100},
+{id:3, teams:"France vs Belgium", stage:"group", venue:"AT&T Stadium, Dallas", date:"2026-06-16", dateLabel:"Jun 16, 2026", tag:"limited", base:1950},
+{id:4, teams:"Brazil vs Mexico", stage:"group", venue:"Rose Bowl, Los Angeles", date:"2026-06-17", dateLabel:"Jun 17, 2026", tag:"hot", base:2200},
+{id:5, teams:"USA vs Paraguay", stage:"group", venue:"SoFi Stadium, Los Angeles", date:"2026-06-18", dateLabel:"Jun 18, 2026", tag:"hot", base:1650},
+{id:6, teams:"Germany vs Argentina", stage:"group", venue:"Levi's Stadium, San Francisco", date:"2026-06-19", dateLabel:"Jun 19, 2026", tag:"limited", base:2050},
+{id:7, teams:"England vs France", stage:"group", venue:"Hard Rock Stadium, Miami", date:"2026-06-20", dateLabel:"Jun 20, 2026", tag:"limited", base:1980},
+{id:8, teams:"Spain vs Croatia", stage:"group", venue:"NRG Stadium, Houston", date:"2026-06-21", dateLabel:"Jun 21, 2026", tag:"limited", base:1750},
+{id:9, teams:"Canada vs Morocco", stage:"group", venue:"BMO Field, Toronto", date:"2026-06-22", dateLabel:"Jun 22, 2026", tag:"available", base:980},
+{id:10, teams:"Mexico vs South Africa", stage:"group", venue:"Estadio Azteca, Mexico City", date:"2026-06-26", dateLabel:"Jun 26, 2026", tag:"available", base:1100},
+{id:11, teams:"Canada vs Croatia", stage:"group", venue:"BC Place, Vancouver", date:"2026-06-27", dateLabel:"Jun 27, 2026", tag:"available", base:920},
+{id:12, teams:"Group Stage — Vancouver", stage:"group", venue:"BC Place, Vancouver", date:"2026-06-28", dateLabel:"Jun 28, 2026", tag:"available", base:850},
+{id:13, teams:"Round of 32 — Toronto", stage:"knockout", venue:"BMO Field, Toronto", date:"2026-07-02", dateLabel:"Jul 2, 2026", tag:"available", base:2800},
+{id:14, teams:"Round of 32 — Vancouver", stage:"knockout", venue:"BC Place, Vancouver", date:"2026-07-03", dateLabel:"Jul 3, 2026", tag:"available", base:2800},
+{id:15, teams:"Round of 32 — Miami", stage:"knockout", venue:"Hard Rock Stadium, Miami", date:"2026-07-04", dateLabel:"Jul 4, 2026", tag:"limited", base:3200},
+{id:16, teams:"Round of 16 — Los Angeles", stage:"knockout", venue:"Rose Bowl, Los Angeles", date:"2026-07-06", dateLabel:"Jul 6, 2026", tag:"limited", base:3800},
+{id:17, teams:"Quarter-Final — Houston", stage:"knockout", venue:"NRG Stadium, Houston", date:"2026-07-09", dateLabel:"Jul 9, 2026", tag:"limited", base:5500},
+{id:18, teams:"Quarter-Final — Dallas", stage:"knockout", venue:"AT&T Stadium, Dallas", date:"2026-07-10", dateLabel:"Jul 10, 2026", tag:"limited", base:5800},
+{id:19, teams:"Semi-Final 1 — Dallas", stage:"semifinal",venue:"AT&T Stadium, Dallas", date:"2026-07-14", dateLabel:"Jul 14, 2026", tag:"limited", base:8500},
+{id:20, teams:"Semi-Final 2 — Los Angeles", stage:"semifinal",venue:"Rose Bowl, Los Angeles", date:"2026-07-15", dateLabel:"Jul 15, 2026", tag:"limited", base:8800},
+{id:21, teams:"THE FINAL", stage:"final", venue:"MetLife Stadium, New Jersey", date:"2026-07-19", dateLabel:"Jul 19, 2026", tag:"hot", base:16000},
+];
+// set default base
+matches[0].base = 1850;
 
- function filterTickets(filter, btn){
- document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
- btn.classList.add('active');
- renderTickets(filter);
- }
+var tiers = [
+{label:"👑 VIP / Front Cat 1", desc:"Prime lower bowl, midfield", mult:1.0, vip:true},
+{label:"⭐ Category 1", desc:"Lower bowl, great sightlines", mult:0.78, vip:false},
+{label:"🎟 Category 2", desc:"Upper tier sideline", mult:0.58, vip:false},
+{label:"🏟 Category 3", desc:"Upper tier, behind goal", mult:0.42, vip:false},
+{label:"💺 Category 4", desc:"Upper corners, best value", mult:0.28, vip:false},
+];
 
- // ── Modal ──
- let currentTicket=null, qty=1;
- const modalWallets = {
- BTC: { address:'bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky', network:'BTC on Bitcoin network', label:'Send BTC to this address:' },
- ETH: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'ETH on Ethereum (ERC-20)', label:'Send ETH to this address:' },
- USDT: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'USDT on Ethereum (ERC-20)', label:'Send USDT to this address:' },
- BNB: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'BNB on BNB Smart Chain (BEP-20)', label:'Send BNB to this address:' },
- };
- let currentCoin = 'BTC';
+var today = new Date('2026-06-11');
 
- function openModal(id){
- currentTicket = tickets.find(t=>t.id===id);
- qty = 1;
- document.getElementById('modalTitle').textContent = currentTicket.teams;
- document.getElementById('modalMatchInfo').textContent = currentTicket.venue + ' · ' + currentTicket.date + ' · ' + currentTicket.category;
- document.getElementById('qtyNum').textContent = 1;
- document.getElementById('txidInput').value = '';
- updateModalTotal();
- showStep(1);
- document.getElementById('modalOverlay').classList.add('open');
- document.body.style.overflow = 'hidden';
- }
+function isUpcoming(m){ return new Date(m.date) >= today; }
 
- function closeModal(){
- document.getElementById('modalOverlay').classList.remove('open');
- document.body.style.overflow='';
- }
+function tagHTML(t){
+if(t==='hot') return '<span class="limited-tag">🔥 High Demand</span>';
+if(t==='limited') return '<span class="limited-tag">⚡ Limited</span>';
+return '<span class="available-tag">✓ Available</span>';
+}
 
- function closeModalOutside(e){
- if(e.target===document.getElementById('modalOverlay')) closeModal();
- }
+function stageLabel(s){
+var labels = {group:'Group Stage',knockout:'Knockout',semifinal:'Semi-Final',final:'The Final'};
+return labels[s] || s;
+}
 
- function changeQty(d){
- qty = Math.max(1, Math.min(10, qty+d));
- document.getElementById('qtyNum').textContent = qty;
- updateModalTotal();
- }
+function renderTickets(filter){
+filter = filter || 'all';
+var grid = document.getElementById('ticketsGrid');
+var upcoming = matches.filter(function(m){ return isUpcoming(m); });
+var list = filter === 'all' ? upcoming : upcoming.filter(function(m){ return m.stage === filter; });
 
- function updateModalTotal(){
- const total = ourPrice(currentTicket.official)*qty;
- document.getElementById('modalTotal').textContent = '$'+total.toLocaleString();
- }
+if(list.length === 0){
+grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--silver)"><div style="font-size:40px;margin-bottom:16px">🏆</div><p style="font-size:18px;font-family:Oswald,sans-serif;color:var(--gold)">No upcoming matches in this category</p></div>';
+return;
+}
 
- function showStep(n){
- document.getElementById('step1').style.display = n===1 ? 'block' : 'none';
- document.getElementById('step2').style.display = n===2 ? 'block' : 'none';
- document.getElementById('step3').style.display = n===3 ? 'block' : 'none';
- }
+var html = '';
+for(var i=0; i<list.length; i++){
+var m = list[i];
+var tiersHTML = '';
+for(var j=0; j<tiers.length; j++){
+var t = tiers[j];
+var op = calcPrice(m.base, m.venue, m.teams, t.mult);
+var our = ourPrice(op);
+var rowClass = t.vip ? 'seat-tier-row vip-row' : 'seat-tier-row';
+var btnClass = t.vip ? 'seat-buy-btn vip-btn' : 'seat-buy-btn';
+tiersHTML += '<div class="'+rowClass+'" onclick="openModal('+m.id+',\''+t.label+'\','+op+')">'
++'<div class="seat-tier-left"><div class="seat-label">'+t.label+'</div><div class="seat-desc">'+t.desc+'</div></div>'
++'<div class="seat-tier-right">'
++'<div class="seat-original">$'+op.toLocaleString()+'</div>'
++'<div class="seat-our">$'+our.toLocaleString()+'</div>'
++'<button class="'+btnClass+'">Book</button>'
++'</div></div>';
+}
+html += '<div class="ticket-card">'
++'<div class="ticket-accent-bar"></div>'
++'<div class="ticket-badge-row"><span class="match-label">'+stageLabel(m.stage)+'</span>'+tagHTML(m.tag)+'</div>'
++'<div class="ticket-body">'
++'<div class="ticket-teams">'+m.teams+'</div>'
++'<div class="ticket-meta"><span>📍 '+m.venue+'</span><span>🗓 '+m.dateLabel+'</span></div>'
++'<div class="seat-tiers">'+tiersHTML+'</div>'
++'</div></div>';
+}
+grid.innerHTML = html;
+}
 
- function goToStep2(){
- const total = '$'+(ourPrice(currentTicket.official)*qty).toLocaleString();
- document.getElementById('step2Match').textContent = currentTicket.teams + ' · ' + qty + (qty===1?' ticket':' tickets');
- document.getElementById('step2Amount').innerHTML = 'Send exactly: <strong>'+total+' USD equivalent</strong>';
- switchCoin('BTC', document.querySelector('.coin-tab'));
- showStep(2);
- document.querySelector('.modal').scrollTop = 0;
- }
+function filterTickets(filter, btn){
+var tabs = document.querySelectorAll('.tab-btn');
+for(var i=0; i<tabs.length; i++) tabs[i].classList.remove('active');
+btn.classList.add('active');
+renderTickets(filter);
+}
 
- function switchCoin(coin, btn){
- currentCoin = coin;
- document.querySelectorAll('.coin-tab').forEach(b=>b.classList.remove('active'));
- if(btn) btn.classList.add('active');
- const w = modalWallets[coin];
- document.getElementById('modalWalletAddr').textContent = w.address;
- document.getElementById('modalCoinLabel').textContent = w.label;
- document.getElementById('modalCoinNet').textContent = w.network;
- }
+// ── MODAL ──
+var currentTicket = null;
+var currentPrice = 0;
+var currentTier = '';
+var qty = 1;
 
- function copyModalAddr(){
- const addr = document.getElementById('modalWalletAddr').textContent;
- navigator.clipboard.writeText(addr).then(()=>{
- const btn = document.querySelector('.wallet-box .copy-btn');
- btn.textContent='✓ Copied'; btn.style.color='#69db7c';
- setTimeout(()=>{ btn.textContent='Copy'; btn.style.color=''; },2000);
- });
- }
+var modalWallets = {
+BTC: {address:'bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky', network:'BTC on Bitcoin network', label:'Send BTC to this address:'},
+ETH: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'ETH on Ethereum (ERC-20)', label:'Send ETH to this address:'},
+USDT: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'USDT on Ethereum (ERC-20)', label:'Send USDT to this address:'},
+BNB: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'BNB on BNB Smart Chain (BEP-20)',label:'Send BNB to this address:'},
+};
 
- function goToStep3(){
- const txid = document.getElementById('txidInput').value.trim();
- const custName = document.getElementById('custName').value.trim();
- const custEmail = document.getElementById('custEmail').value.trim();
- if(!custName){ alert('Please enter your full name.'); return; }
- if(!custEmail || !custEmail.includes('@')){ alert('Please enter a valid email address.'); return; }
- if(!txid){ alert('Please paste your Transaction ID / Hash before confirming.'); return; }
+function openModal(id, tier, price){
+currentTicket = null;
+for(var i=0; i<matches.length; i++){ if(matches[i].id===id){ currentTicket=matches[i]; break; } }
+if(!currentTicket) return;
+currentTier = tier;
+currentPrice = price;
+qty = 1;
+document.getElementById('modalTitle').textContent = currentTicket.teams;
+document.getElementById('modalMatchInfo').textContent = currentTicket.venue + ' · ' + currentTicket.dateLabel + ' · ' + tier;
+document.getElementById('qtyNum').textContent = 1;
+document.getElementById('txidInput').value = '';
+document.getElementById('custName').value = '';
+document.getElementById('custEmail').value = '';
+document.getElementById('emailStatus').className = 'email-status';
+updateModalTotal();
+showStep(1);
+document.getElementById('modalOverlay').classList.add('open');
+document.body.style.overflow = 'hidden';
+}
 
- const code = generateCode();
- const total = '$'+(ourPrice(currentTicket.official)*qty).toLocaleString();
+function closeModal(){
+document.getElementById('modalOverlay').classList.remove('open');
+document.body.style.overflow = '';
+}
 
- // Populate step 3
- document.getElementById('confirmName').textContent = custName;
- document.getElementById('confirmCode').textContent = code;
- document.getElementById('confirmMatch').textContent = currentTicket.teams + ' — ' + currentTicket.venue;
- document.getElementById('confirmQty').textContent = qty + (qty===1?' ticket':' tickets');
- document.getElementById('confirmTotal').textContent = total;
- document.getElementById('confirmTxid').textContent = txid;
+function closeModalOutside(e){
+if(e.target === document.getElementById('modalOverlay')) closeModal();
+}
 
- // Send confirmation email via EmailJS
- const statusEl = document.getElementById('emailStatus');
- statusEl.className = 'email-status sending';
- statusEl.textContent = ' Sending confirmation email...';
+function changeQty(d){
+qty = Math.max(1, Math.min(10, qty+d));
+document.getElementById('qtyNum').textContent = qty;
+updateModalTotal();
+}
 
- const templateParams = {
- to_name: custName,
- to_email: custEmail,
- conf_code: code,
- match: currentTicket.teams,
- venue: currentTicket.venue,
- match_date: currentTicket.date,
- tickets: qty + (qty===1?' ticket':' tickets'),
- total_paid: total,
- txid: txid,
- };
+function updateModalTotal(){
+var total = ourPrice(currentPrice) * qty;
+document.getElementById('modalTotal').textContent = '$' + total.toLocaleString();
+}
 
- emailjs.init('OepQYCxSrkeROEnBG');
- emailjs.send('service_ihkw244', 'template_ul6af6b', templateParams)
- .then(function(response) {
- statusEl.className = 'email-status sent';
- statusEl.textContent = ' Confirmation email sent to ' + custEmail;
- }, function(error) {
- statusEl.className = 'email-status error';
- statusEl.textContent = ' Email could not be sent. Please screenshot your confirmation code.';
- console.error('EmailJS error:', JSON.stringify(error));
- });
+function showStep(n){
+document.getElementById('step1').style.display = n===1 ? 'block' : 'none';
+document.getElementById('step2').style.display = n===2 ? 'block' : 'none';
+document.getElementById('step3').style.display = n===3 ? 'block' : 'none';
+}
 
- showStep(3);
- document.querySelector('.modal').scrollTop = 0;
- }
+function goToStep2(){
+var total = '$' + (ourPrice(currentPrice)*qty).toLocaleString();
+document.getElementById('step2Match').textContent = currentTicket.teams + ' · ' + qty + (qty===1?' ticket':' tickets');
+document.getElementById('step2Amount').innerHTML = 'Send exactly: <strong>' + total + ' USD equivalent</strong>';
+switchCoin('BTC', document.querySelector('.coin-tab'));
+showStep(2);
+document.querySelector('.modal').scrollTop = 0;
+}
 
- function generateCode(){
- const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
- let code='';
- for(let i=0;i<3;i++) code+=chars[Math.floor(Math.random()*chars.length)];
- code+='-';
- for(let i=0;i<4;i++) code+=chars[Math.floor(Math.random()*chars.length)];
- code+='-';
- for(let i=0;i<4;i++) code+=Math.floor(Math.random()*10);
- return code;
- }
+function switchCoin(coin, btn){
+var btns = document.querySelectorAll('.coin-tab');
+for(var i=0; i<btns.length; i++) btns[i].classList.remove('active');
+if(btn) btn.classList.add('active');
+var w = modalWallets[coin];
+document.getElementById('modalWalletAddr').textContent = w.address;
+document.getElementById('modalCoinLabel').textContent = w.label;
+document.getElementById('modalCoinNet').textContent = w.network;
+}
 
- // ── Crypto ──
- const wallets = {
- BTC: { address:'bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky', network:'BTC on the Bitcoin network', label:'Bitcoin (BTC) Wallet Address' },
- ETH: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'ETH on the Ethereum (ERC-20) network', label:'Ethereum (ETH) Wallet Address' },
- USDT: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'USDT on the Ethereum (ERC-20) network', label:'USDT (ERC-20) Wallet Address' },
- BNB: { address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'BNB on the BNB Smart Chain (BEP-20)', label:'BNB (BEP-20) Wallet Address' },
- };
+function copyModalAddr(){
+var addr = document.getElementById('modalWalletAddr').textContent;
+navigator.clipboard.writeText(addr).then(function(){
+var btn = document.querySelector('.wallet-box .copy-btn');
+btn.textContent = '✓ Copied'; btn.style.color = '#69db7c';
+setTimeout(function(){ btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+});
+}
 
- function selectCoin(coin, btn){
- document.querySelectorAll('.crypto-btn').forEach(b=>b.classList.remove('selected'));
- if(btn) btn.classList.add('selected');
- const w=wallets[coin];
- document.getElementById('walletAddress').textContent=w.address;
- document.getElementById('coinNetwork').textContent=w.network;
- document.getElementById('coinLabel').textContent=w.label;
- }
+function goToStep3(){
+var name = document.getElementById('custName').value.trim();
+var email = document.getElementById('custEmail').value.trim();
+var txid = document.getElementById('txidInput').value.trim();
+if(!name){ alert('Please enter your full name.'); return; }
+if(!email || email.indexOf('@')<0){ alert('Please enter a valid email address.'); return; }
+if(!txid){ alert('Please paste your Transaction ID before confirming.'); return; }
 
- function copyAddress(){
- const addr=document.getElementById('walletAddress').textContent;
- navigator.clipboard.writeText(addr).then(()=>{
- const btn=document.querySelector('.copy-btn');
- const orig=btn.textContent;
- btn.textContent='✓ Copied'; btn.style.color='#69db7c';
- setTimeout(()=>{ btn.textContent=orig; btn.style.color=''; },2000);
- });
- }
+var code = generateCode();
+var total = '$' + (ourPrice(currentPrice)*qty).toLocaleString();
 
- // ── Stars ──
- function createStars(){
- const c=document.getElementById('stars');
- for(let i=0;i<80;i++){
- const s=document.createElement('div'); s.className='star';
- s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%';
- s.style.animationDelay=Math.random()*4+'s'; s.style.animationDuration=(2+Math.random()*3)+'s';
- c.appendChild(s);
- }
- }
+document.getElementById('confirmName').textContent = name;
+document.getElementById('confirmCode').textContent = code;
+document.getElementById('confirmMatch').textContent = currentTicket.teams + ' — ' + currentTicket.venue;
+document.getElementById('confirmQty').textContent = qty + (qty===1?' ticket':' tickets');
+document.getElementById('confirmTotal').textContent = total;
+document.getElementById('confirmTxid').textContent = txid;
 
- function reveal(){
- document.querySelectorAll('.reveal').forEach(el=>{
- if(el.getBoundingClientRect().top < window.innerHeight-80) el.classList.add('visible');
- });
- }
+var statusEl = document.getElementById('emailStatus');
+statusEl.className = 'email-status sending';
+statusEl.textContent = '📤 Sending confirmation email...';
 
- // Initialize EmailJS at page load
- emailjs.init('OepQYCxSrkeROEnBG');
+emailjs.send('service_ihkw244', 'template_ul6af6b', {
+to_name: name,
+to_email: email,
+conf_code: code,
+match: currentTicket.teams,
+venue: currentTicket.venue,
+match_date: currentTicket.dateLabel,
+tickets: qty + (qty===1?' ticket':' tickets'),
+total_paid: total,
+txid: txid,
+}).then(function(){
+statusEl.className = 'email-status sent';
+statusEl.textContent = '✅ Confirmation email sent to ' + email;
+}, function(){
+statusEl.className = 'email-status error';
+statusEl.textContent = '⚠️ Please screenshot your confirmation code above.';
+});
 
- window.addEventListener('scroll', reveal);
- createStars(); renderTickets(); reveal();
+showStep(3);
+document.querySelector('.modal').scrollTop = 0;
+}
 
- // Payment switcher
- function switchPayment(method) {
- // Update method buttons
- document.getElementById('cryptoMethodBtn').classList.remove('selected-method');
- document.getElementById('bankMethodBtn').classList.remove('selected-method');
- document.getElementById('cardMethodBtn').classList.remove('selected-method');
+function generateCode(){
+var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+var code = '';
+for(var i=0;i<3;i++) code += chars[Math.floor(Math.random()*chars.length)];
+code += '-';
+for(var i=0;i<4;i++) code += chars[Math.floor(Math.random()*chars.length)];
+code += '-';
+for(var i=0;i<4;i++) code += Math.floor(Math.random()*10);
+return code;
+}
 
- // Hide all panels
- document.querySelector('.crypto-panel').classList.remove('active-panel');
- document.getElementById('bankPanel').classList.remove('active-panel');
- document.getElementById('cardPanel').classList.remove('active-panel');
+// ── CRYPTO PANEL (payment section) ──
+var wallets = {
+BTC: {address:'bc1qedpsfs5en6kdua649vlxwneywqsu002h9v68ky', network:'BTC on the Bitcoin network', label:'Bitcoin (BTC) Wallet Address'},
+ETH: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'ETH on the Ethereum (ERC-20) network',label:'Ethereum (ETH) Wallet Address'},
+USDT: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'USDT on the Ethereum (ERC-20) network',label:'USDT (ERC-20) Wallet Address'},
+BNB: {address:'0xc34B75FB66F544bF054a6BE1215fEbf76CE73aD7', network:'BNB on the BNB Smart Chain (BEP-20)', label:'BNB (BEP-20) Wallet Address'},
+};
 
- // Show selected
- if(method === 'crypto') {
- document.getElementById('cryptoMethodBtn').classList.add('selected-method');
- document.querySelector('.crypto-panel').classList.add('active-panel');
- } else if(method === 'bank') {
- document.getElementById('bankMethodBtn').classList.add('selected-method');
- document.getElementById('bankPanel').classList.add('active-panel');
- } else if(method === 'card') {
- document.getElementById('cardMethodBtn').classList.add('selected-method');
- document.getElementById('cardPanel').classList.add('active-panel');
- }
- }
+function selectCoin(coin, btn){
+var btns = document.querySelectorAll('.crypto-btn');
+for(var i=0;i<btns.length;i++) btns[i].classList.remove('selected');
+if(btn) btn.classList.add('selected');
+var w = wallets[coin];
+document.getElementById('walletAddress').textContent = w.address;
+document.getElementById('coinNetwork').textContent = w.network;
+document.getElementById('coinLabel').textContent = w.label;
+}
 
- function showUnavailAlert(id) {
- const el = document.getElementById(id);
- el.classList.add('show');
- el.scrollIntoView({behavior:'smooth', block:'nearest'});
- }
+function copyAddress(){
+var addr = document.getElementById('walletAddress').textContent;
+navigator.clipboard.writeText(addr).then(function(){
+var btn = document.querySelector('.address-box .copy-btn');
+var orig = btn.textContent;
+btn.textContent = '✓ Copied'; btn.style.color = '#69db7c';
+setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
+});
+}
 
- // Default: show crypto panel
- switchPayment('crypto');
+function switchPayment(method){
+document.getElementById('cryptoMethodBtn').classList.remove('selected-method');
+document.getElementById('bankMethodBtn').classList.remove('selected-method');
+document.getElementById('cardMethodBtn').classList.remove('selected-method');
+document.getElementById('cryptoPanel').classList.remove('active-panel');
+document.getElementById('bankPanel').classList.remove('active-panel');
+document.getElementById('cardPanel').classList.remove('active-panel');
+if(method==='crypto'){
+document.getElementById('cryptoMethodBtn').classList.add('selected-method');
+document.getElementById('cryptoPanel').classList.add('active-panel');
+} else if(method==='bank'){
+document.getElementById('bankMethodBtn').classList.add('selected-method');
+document.getElementById('bankPanel').classList.add('active-panel');
+} else {
+document.getElementById('cardMethodBtn').classList.add('selected-method');
+document.getElementById('cardPanel').classList.add('active-panel');
+}
+}
+
+function showUnavailAlert(id){
+var el = document.getElementById(id);
+el.classList.add('show');
+el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── STARS ──
+function createStars(){
+var c = document.getElementById('stars');
+for(var i=0;i<80;i++){
+var s = document.createElement('div');
+s.className = 'star';
+s.style.left = Math.random()*100+'%';
+s.style.top = Math.random()*100+'%';
+s.style.animationDelay = Math.random()*4+'s';
+s.style.animationDuration = (2+Math.random()*3)+'s';
+c.appendChild(s);
+}
+}
+
+function reveal(){
+var els = document.querySelectorAll('.reveal');
+for(var i=0;i<els.length;i++){
+if(els[i].getBoundingClientRect().top < window.innerHeight-80) els[i].classList.add('visible');
+}
+}
+
+window.addEventListener('scroll', reveal);
+
+window.addEventListener('load', function(){
+if(typeof emailjs !== 'undefined') emailjs.init('OepQYCxSrkeROEnBG');
+createStars();
+renderTickets('all');
+reveal();
+});
 </script>
 </body>
 </html>
